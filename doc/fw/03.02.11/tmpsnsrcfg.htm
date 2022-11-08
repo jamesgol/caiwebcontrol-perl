@@ -1,0 +1,393 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>CAI WebControl PLC</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="api/NetDevAPI.js"></script>
+<script type="text/javascript" src="api/ajax.js"></script>
+<script type="text/javascript" src="api/assembler.js"></script>
+<script type="text/javascript" src="api/encoding.js"></script>
+<script type="text/javascript" src="api/helpers.js"></script>
+<script type="text/javascript" src="help/help.js"></script>
+<script type="text/javascript" src="help/version.js"></script>
+
+<style type="text/css">
+<!--
+.style1 {color: #FFFFFF}
+-->
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div id="title">
+		  <div class="right">CAI WebControl PLC </div>
+    <p><span id="hello">&nbsp;</span></p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+	  
+	
+	<div id="attributes">
+	  <table width="100%" border="0" bordercolor="#FFFFFF" bgcolor="#0066FF">
+			<tr>
+			  <td width="271" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="version">Version: v03.02.11</span></div></td>
+   			  <td width="359" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">IpAddress: 192.168.1.15</span></div></td>
+			  <td width="417" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">Name: WEBCONTROL     </span></div></td> 
+			  <td width="191" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="date">10/14/2011</span></div></td>
+			  <td width="176" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="time">12:05:18</span></div></td>
+			</tr>
+	  </table>
+		</div>
+	</div>
+
+	<div id="page">
+	  <div class="center">Temperature Sensor Setup</div>
+	</div>
+
+	<div id="menu">
+	<a href="/index.htm">System Status</a>
+	<a href="/opctrl.htm">Output Control</a>
+	<a href="/x10ctrl.htm">x10 Control</a>
+	<a href="/iosetup.htm">I/O Setup</a>
+	<a href="/email.htm">Email Setup</a>
+	<a href="/tmpsnsrcfg.htm">Temperature Sensor Setup</a>
+	<a href="/plc.htm">PLC Program</a>
+	<a href="/boardsetup.htm">General Setup</a>
+	<a href="/netcfg.htm">Network Setup</a>
+	<a href="javascript:showHelp('http://www.cainetworks.com/products/webcontrol/index.html')">Help</a>
+	</div>
+
+
+
+
+
+	<!-- content -->
+	
+	<div align="center" style="margin-right:170px;">
+	<table width="503" border="1">
+	<tr>
+	  <td colspan="3"><div align="center" class="style4"><strong>Configured Sensors </strong></div></td>
+	</tr>
+	<tr>
+	  <td width="84"><div align="center" class="style5"> Sensor </div></td>
+	  <td width="229"><div align="center" class="style5">ROM Code </div></td>
+  	  <td width="168"><div align="center" class="style5">Units </div></td>
+	</tr>
+	<tr>
+	  <td><div align="center">T1</div></td>
+	  <td><div align="center" class="style5">
+		<label>
+		<select name="select1" id="select1">
+		</select>
+		</label>
+	  </div></td>
+	  <td width="168"><div align="center" class="style5">
+	    <label>
+	    <input name="group1" type="radio" id="ts1units_C" value="checked" checked="checked" />
+	    &deg;C</label>
+	    <label>
+	     <input name="group1" type="radio" value="checked" id="ts1units_F"/>
+	    &deg;F</label>
+	  </div></td>
+	</tr>
+	<tr>
+	  <td><div align="center">T2</div></td>
+	  <td><div align="center" class="style5">
+		<select name="select2" id="select2">
+		</select>
+	  </div></td>
+  	    <td width="168"><div align="center" class="style5">
+  	      <label>
+  	     	<input name="group2" type="radio"  id="ts2units_C" value="checked" checked="checked" />
+			&deg;C</label>
+			<label>
+			<input name="group2" type="radio" value="checked"  id="ts2units_F"/>
+			&deg;F 
+			</label>
+  	    </div></td>
+	</tr>
+	<tr>
+	  <td><div align="center">T3</div></td>
+	  <td><div align="center" class="style5">
+		<select name="select3" id="select3">
+		</select>
+	  </div></td>
+  	    <td width="168"><div align="center" class="style5">
+  	      <label></label>
+		  <label>
+  	      <input name="group3" type="radio"  id="ts3units_C" value="checked" checked="checked"/>
+			&deg;C</label>
+			<label>
+			<input name="group3" type="radio" value="checked"  id="ts3units_F"/>
+			&deg;F </label>
+  	    </div></td>
+	</tr>
+	<tr>
+	  <td><div align="center">T4</div></td>
+	  <td><div align="center" class="style5">
+		<select name="select4" id="select4">
+		</select>
+	  </div></td>
+  	    <td width="168"><div align="center" class="style5">
+  	      <label>
+  	      <input name="group4" type="radio"  id="ts4units_C" value="checked" checked="checked"/>
+			&deg;C</label>
+			<label>
+			<input name="group4" type="radio" value="checked" id="ts4units_F"/>
+			&deg;F </label>
+  	    </div></td>
+	</tr>
+	<tr>
+	  <td><div align="center">T5</div></td>
+	  <td><div align="center" class="style5" >
+		<select name="select5" id="select5">
+		</select>
+	  </div></td>
+  	    <td width="168"><div align="center" class="style5">
+  	      <label>
+  	      </label><label>
+  	      <input name="group5" type="radio"  id="ts5units_C" value="checked" checked="checked"/>
+			&deg;C</label>
+			<label>
+			<input name="group5" type="radio" value="checked" id="ts5units_F"/>
+			&deg;F</label>
+  	    </div></td>
+	</tr>
+	<tr>
+	  <td><div align="center">T6</div></td>
+	  <td><div align="center" class="style5">
+		<select name="select6" id="select6">
+		</select>
+	  </div></td>
+  	    <td width="168"><div align="center" class="style5">
+  	      <label></label>
+  	      <label>
+  	      <input name="group6" type="radio"  id="ts6units_C" value="checked" checked="checked"/>
+		&deg;C</label>
+          <label>
+          <input name="group6" type="radio" value="checked"  id="ts6units_F"/>
+			&deg;F</label>
+		</div></td>
+	</tr>
+	<tr>
+	  <td><div align="center">T7</div></td>
+	  <td><div align="center" class="style5" >
+		<select name="select7" id="select7">
+		</select>
+	  </div></td>
+  	    <td width="168"><div align="center" class="style5">
+  	      <label></label>
+		  <label>
+  	      <input name="group7" type="radio" id="ts7units_C" value="checked" checked="checked"/>
+			&deg;C</label>
+			<label>
+			<input name="group7" type="radio" value="checked" id="ts7units_F"/>
+			&deg;F </label>
+  	    </div></td>
+	</tr>
+	<tr>
+	  <td><div align="center">T8</div></td>
+	  <td><div align="center" class="style5" >
+		<select name="select8" id="select8">
+		</select>
+	  </div></td>
+  	    <td width="168"><div align="center" class="style5">
+  	      <label>
+  	      <input name="group8" type="radio" id="ts8units_C" value="checked" checked="checked"/>
+			&deg;C</label>
+			<label>
+			<input name="group8" type="radio" value="checked" id="ts8units_F"/>
+			&deg;F </label>
+  	    </div></td>
+	</tr>
+	</table>
+	</div>
+	
+	<p>&nbsp;</p>
+	
+	<div align="center" style="margin-right:170px">
+	<label>
+		<input id="sendBtn" type="button" name="Button" value="Send"  onclick="OnSend()" style="width:200px; height:100px"/>
+	</label>
+	</div>
+  
+	<div class="push"></div>
+</div>
+
+<script type="text/javascript">
+function OnSend()
+{
+	try
+	{	
+		var tsConfig = new TempSnsrCfg();
+		
+		for(var i = 1; i<=NUM_OF_TEMPERATURE_SENSORS; i++)
+		{
+			var selBox = document.getElementById('select' + i);
+			
+			for(var x = 0; x<=NUM_OF_TEMPERATURE_SENSORS; x++)
+			{
+				if(selBox[x] != null)
+				{
+					if(selBox[x].selected)
+					{
+						tsConfig.setRomCode(selBox[x].text, i);
+						break;
+					}
+				}
+			}
+			
+			if(document.getElementById('ts' + i + 'units_C').checked)
+			{
+				tsConfig.setUnits("centigrade", i);
+			}
+			else
+			{
+				tsConfig.setUnits("fahrenheit", i);
+			}
+		}
+		
+		NetDevAPI.setTempSnsrConfig(tsConfig, resultCallback);
+		
+		document.getElementById('sendBtn').disabled=true;
+		document.getElementById('sendBtn').value="Sending...";
+	}
+	catch(error)
+	{
+		alert(error);
+	}
+}
+
+function resultCallback(result)
+{
+	document.getElementById('sendBtn').disabled=false;
+	document.getElementById('sendBtn').value="Send";
+	if(result == 'error')
+	{
+		alert("Error occured whilst sending configuration to NetDev");
+	}
+	else
+	{
+		NetDevAPI.getTempSnsrConfig(getCfgCallback);
+		alert("Config sent");
+	}
+}
+
+function getCfgCallback(cfg)
+{
+	document.getElementById('sendBtn').disabled=false;
+	if(cfg != null)
+	{
+		var tsConfig = cfg;
+		for(var i = 1; i<=NUM_OF_TEMPERATURE_SENSORS; i++)
+		{
+			var selBox = document.getElementById('select' + i);
+			var rc = tsConfig.getRomCode(i);
+			for(var x = 0; x<=NUM_OF_TEMPERATURE_SENSORS; x++)
+			{
+				if(selBox[x] != null)
+				{
+					if(selBox[x].text == rc)
+					{
+						selBox[x].selected = '1';
+						break;
+					}
+				}
+			}
+			
+			if(tsConfig.getUnits(i) == "centigrade")
+			{
+				document.getElementById('ts' + i + 'units_C').checked = true;
+			}
+			else
+			{
+				document.getElementById('ts' + i + 'units_F').checked = true;
+			}
+		}	
+		
+	}
+}
+
+function getAvalibleROMCodes(statusXML)
+{
+	if(statusXML != null)
+	{	
+		for(var i = 1; i<=NUM_OF_TEMPERATURE_SENSORS; i++)
+		{
+			var selBox = document.getElementById('select' + i);
+			var optn = document.createElement("OPTION");
+			optn.text = "000000000000";
+			optn.value = 0;
+			selBox.options.add(optn);
+			
+			for(var x = 1; x<=NUM_OF_TEMPERATURE_SENSORS; x++)
+			{
+				var optn = document.createElement("OPTION");
+				var rc = getXMLValue(statusXML, 'romcode' + x);
+				if(rc != "000000000000")
+				{
+					optn.text = rc;
+					optn.value = x;
+					selBox.options.add(optn);
+				}
+			}
+		}
+		
+		NetDevAPI.getTempSnsrConfig(getCfgCallback);
+	}
+}
+
+function statusUpdate(statusXML)
+{
+	if(statusXML != null)
+	{	
+		var id = document.getElementById('date');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'date');
+		}
+		
+		var id = document.getElementById('time');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'time');
+		}
+	}
+	
+	setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+	
+}
+
+var PollingEnabled = false;
+function genPC(cfg)
+{
+	if(cfg != null)
+	{
+		PollingEnabled = cfg.getAjaxPolling();
+		if(PollingEnabled)
+		{
+			setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+		}
+	}
+}
+
+window.onload = function() {
+
+	document.getElementById('sendBtn').disabled=true;
+	NetDevAPI.getBoardStatus(getAvalibleROMCodes);
+	NetDevAPI.getGeneralConfig(genPC);
+}
+
+</script>
+
+<div class="spacer">&nbsp;</div>
+<div id="footer" align="center">Copyright &copy; 2008-2012 CAI Networks, Inc.</div>
+</body>
+<HEAD>
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+</HEAD>
+</html>

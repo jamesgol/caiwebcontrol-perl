@@ -1,0 +1,332 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>CAI WebControl PLC</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="api/NetDevAPI.js"></script>
+<script type="text/javascript" src="api/ajax.js"></script>
+<script type="text/javascript" src="api/assembler.js"></script>
+<script type="text/javascript" src="api/encoding.js"></script>
+<script type="text/javascript" src="api/helpers.js"></script>
+<script type="text/javascript" src="help/help.js"></script>
+<script type="text/javascript" src="help/version.js"></script>
+
+<style type="text/css">
+<!--
+.style1 {color: #FFFFFF}
+-->
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div id="title">
+		  <div class="right">CAI WebControl PLC </div>
+    <p><span id="hello">&nbsp;</span></p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+	  
+	
+	<div id="attributes">
+	  <table width="100%" border="0" bordercolor="#FFFFFF" bgcolor="#0066FF">
+			<tr>
+			  <td width="271" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="version">Version: v03.02.11</span></div></td>
+   			  <td width="359" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">IpAddress: 192.168.1.15</span></div></td>
+			  <td width="417" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">Name: WEBCONTROL     </span></div></td> 
+			  <td width="191" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="date">10/14/2011</span></div></td>
+			  <td width="176" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="time">12:05:16</span></div></td>
+			</tr>
+	  </table>
+		</div>
+	</div>
+
+	<div id="page">
+	  <div class="center">SMTP Email Setup</div>
+	</div>
+
+	<div id="menu">
+	<a href="/index.htm">System Status</a>
+	<a href="/opctrl.htm">Output Control</a>
+	<a href="/x10ctrl.htm">x10 Control</a>
+	<a href="/iosetup.htm">I/O Setup</a>
+	<a href="/email.htm">Email Setup</a>
+	<a href="/tmpsnsrcfg.htm">Temperature Sensor Setup</a>
+	<a href="/plc.htm">PLC Program</a>
+	<a href="/boardsetup.htm">General Setup</a>
+	<a href="/netcfg.htm">Network Setup</a>
+	<a href="javascript:showHelp('http://www.cainetworks.com/products/webcontrol/index.html')">Help</a>
+	</div>
+
+
+
+
+
+	<!-- content -->
+	<p>&nbsp;</p>
+	<div align="center">
+	<table width="665" border="1">
+	<tr>
+	  <th width="318" nowrap="nowrap"><div align="left">SMTP Host </div></th>
+	  <td width="331"><label>
+		<input name="text" type="text" id="server" maxlength="48" width="250px" />
+		Port
+		<input name="text" type="text" id="port"  size="5" maxlength="5" />
+	  </label></td>
+	</tr>
+	<tr>
+	  <th nowrap="nowrap"><div align="left">Username (leave blank if none) </div></th>
+	  <td><label>
+		<input name="text" type="text" id="username" maxlength="48" width="250px"/>
+	  </label></td>
+	</tr>
+	<tr>
+	  <th nowrap="nowrap"><div align="left">Password (leave blank if none) </div></th>
+	  <td><label>
+		<input name="text" type="text" id="password" maxlength="48" width="250px"/>
+	  </label></td>
+	</tr>
+	<tr>
+	  <th nowrap="nowrap"><div align="left">To Address </div></th>
+	  <td><label>
+		<input name="text" type="text" id="toAddress" maxlength="48" width="250px"/>
+	  </label></td>
+	</tr>
+	<tr>
+	  <th nowrap="nowrap"><div align="left">From Address </div></th>
+	  <td><label>
+		<input name="text" type="text" id="fromAddress" maxlength="48" width="250px"/>
+	  </label></td>
+	</tr>
+  </table>
+	  
+  <p>&nbsp;</p>
+  <table width="552" border="1">
+	<tr>
+	  <th width="108" nowrap="nowrap" scope="col">Message ID </th>
+	  <th width="188" scope="col">Message Subject</th>
+	  <th width="165" scope="col">Message Body </th>
+	  <th width="63" scope="col"></th>
+	</tr>
+	<tr>
+	  <td height="39" nowrap="nowrap"><div align="center"><strong>EM1</strong></div></td>
+	  <td><label>
+		<textarea name="textarea8" id="subject1" rows="2" ></textarea>
+	  </label></td>
+	  <td><label>
+		<textarea name="textfield" id="body1" rows="5"></textarea>
+	  </label></td>
+	  <td><label>
+	    <div align="center">
+	      <input name="Test" type="button" id="Test" value="Test" onclick="NetDevAPI.sendEmail(1, testMailCallback)" />
+	        </div>
+	  </label></td>
+	</tr>
+	<tr>
+	  <td nowrap="nowrap"><div align="center"><strong>EM2</strong></div></td>
+	  <td><textarea name="textarea" id="subject2" rows="2"></textarea></td>
+	  <td><textarea name="textarea9" id="body2" rows="5"></textarea></td>
+	  	  <td><div align="center">
+	  	    <input name="Test2" type="button" id="Test2" value="Test" onclick="NetDevAPI.sendEmail(2, testMailCallback)" />
+  	      </div></td>
+	</tr>
+	<tr>
+	  <td nowrap="nowrap"><div align="center"><strong>EM3</strong></div></td>
+	  <td><textarea name="textarea" id="subject3" rows="2"></textarea></td>
+	  <td><textarea name="textarea9" id="body3" rows="5"></textarea></td>
+	  	  <td><div align="center">
+	  	    <input name="Test3" type="button" id="Test3" value="Test" onclick="NetDevAPI.sendEmail(3, testMailCallback)" />
+  	      </div></td>
+	</tr>
+	<tr>
+	  <td nowrap="nowrap"><div align="center"><strong>EM4</strong></div></td>
+	  <td><textarea name="textarea" id="subject4" rows="2"></textarea></td>
+	  <td><textarea name="textarea9" id="body4" rows="5"></textarea></td>
+	  	  <td><div align="center">
+	  	    <input name="Test4" type="button" id="Test4" value="Test" onclick="NetDevAPI.sendEmail(4, testMailCallback)" />
+  	      </div></td>
+	</tr>
+	<tr>
+	  <td nowrap="nowrap"><div align="center"><strong>EM5</strong></div></td>
+	  <td><textarea name="textarea" id="subject5" rows="2"></textarea></td>
+	  <td><textarea name="textarea9" id="body5" rows="5"></textarea></td>
+	  	  <td><div align="center">
+	  	    <input name="Test5" type="button" id="Test5" value="Test"  onclick="NetDevAPI.sendEmail(5, testMailCallback)"/>
+  	      </div></td>
+	</tr>
+	<tr>
+	  <td nowrap="nowrap"><div align="center"><strong>EM6</strong></div></td>
+	  <td><textarea name="textarea" id="subject6" rows="2"></textarea></td>
+	  <td><textarea name="textarea9" id="body6" rows="5"></textarea></td>
+	  	  <td><div align="center">
+	  	    <input name="Test6" type="button" id="Test6" value="Test" onclick="NetDevAPI.sendEmail(6, testMailCallback)" />
+  	      </div></td>
+	</tr>
+	<tr>
+	  <td nowrap="nowrap"><div align="center"><strong>EM7</strong></div></td>
+	  <td><textarea name="textarea" id="subject7" rows="2"></textarea></td>
+	  <td><textarea name="textarea9" id="body7" rows="5"></textarea></td>
+	  	  <td><div align="center">
+	  	    <input name="Test7" type="button" id="Test7" value="Test" onclick="NetDevAPI.sendEmail(7, testMailCallback)" />
+  	      </div></td>
+	</tr>
+	<tr>
+	  <td nowrap="nowrap"><div align="center"><strong>EM8</strong></div></td>
+	  <td><textarea name="textarea" id="subject8" rows="2"></textarea></td>
+	  <td><textarea name="textarea9" id="body8" rows="5"></textarea></td>
+	  	  <td><div align="center">
+	  	    <input name="Test8" type="button" id="Test8" value="Test"  onclick="NetDevAPI.sendEmail(8, testMailCallback)"/>
+  	      </div></td>
+	</tr>
+  </table>
+  </div>
+  <p>&nbsp;</p>
+
+	<div align="center">
+		<input id="sendBtn" type="button" name="Button" value="Send"  onclick="OnSend()" style="width:200px; height:100px"/>
+	</div>
+
+	<div class="push"></div>
+</div>
+
+
+<script type="text/javascript">
+function testMailCallback(result)
+{
+	if(result == 'error')
+	{
+		alert("Error occured whilst sending a test email");
+	}
+	else
+	{
+		alert("Test Email Sent");
+	}
+}
+
+function OnSend()
+{	
+	try
+	{
+		var emailConfig = new EmailCfg();
+		
+		emailConfig.setServer(document.getElementById('server').value);
+		emailConfig.setPort(document.getElementById('port').value);
+		emailConfig.setToAddress(document.getElementById('toAddress').value);
+		emailConfig.setFromAddress(document.getElementById('fromAddress').value);
+		emailConfig.setUsername(document.getElementById('username').value);
+		emailConfig.setPassword(document.getElementById('password').value);
+		
+		/* message subjects and bodys */
+		for(var i = 0; i<8; i++)
+		{
+			var m = i + 1;
+			
+			emailConfig.setMsgBody(m, document.getElementById('body' + m).value);
+			emailConfig.setMsgSubject(m, document.getElementById('subject' + m).value);
+		}
+		
+		NetDevAPI.setEmailConfig(emailConfig, resultCallback);
+		
+		document.getElementById('sendBtn').disabled=true;
+		document.getElementById('sendBtn').value="Sending...";
+		
+	}
+	catch(error)
+	{
+		alert(error);
+	}
+}
+
+function resultCallback(result)
+{
+	document.getElementById('sendBtn').disabled=false;
+	document.getElementById('sendBtn').value="Send";
+	if(result == 'error')
+	{
+		alert("Error occured whilst sending configuration to NetDev");
+	}
+	else
+	{
+		NetDevAPI.getEmailConfig(getCfgCallback);
+		alert("Config sent");
+	}
+}
+
+function getCfgCallback(cfg)
+{
+	document.getElementById('sendBtn').disabled=false;
+			
+	if(cfg != null)
+	{
+		var emailConfig = cfg;
+
+		document.getElementById('server').value = emailConfig.getServer();
+		document.getElementById('port').value = emailConfig.getPort();
+		document.getElementById('toAddress').value = emailConfig.getToAddress();
+		document.getElementById('fromAddress').value = emailConfig.getFromAddress();
+		document.getElementById('username').value = emailConfig.getUsername();
+		document.getElementById('password').value = emailConfig.getPassword();
+		
+		/* message subjects and bodys */
+		for(var i = 0; i<8; i++)
+		{
+			var m = i + 1;
+			
+			document.getElementById('body' + m).value = emailConfig.getMsgBody(m);
+			document.getElementById('subject' + m).value = emailConfig.getMsgSubject(m);
+		}
+	}
+}
+
+function statusUpdate(statusXML)
+{
+	if(statusXML != null)
+	{	
+		var id = document.getElementById('date');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'date');
+		}
+		
+		var id = document.getElementById('time');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'time');
+		}
+	}
+	
+	setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+	
+}
+
+function genCfgCallback(cfg)
+{
+	if(cfg != null)
+	{
+		if(cfg.getAjaxPolling())
+		{
+			setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+		}
+	}
+}
+
+window.onload = function() {
+
+	document.getElementById('sendBtn').disabled=true;
+	NetDevAPI.getGeneralConfig(genCfgCallback);
+	NetDevAPI.getEmailConfig(getCfgCallback);
+
+}
+
+</script>
+
+<div class="spacer">&nbsp;</div>
+<div id="footer" align="center">Copyright &copy; 2008-2012 CAI Networks, Inc.</div>
+</body>
+<HEAD>
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+</HEAD>
+</html>

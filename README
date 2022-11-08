@@ -1,0 +1,19 @@
+CAI Webcontrol Perl Modules
+by James Golovich <james@gnuinter.net>
+
+If anyone ever uses these I'll consider putting them on CPAN when it gets more advanced.
+
+Supports:
+Variable subsition in PLC code
+Generating RRD graphs
+Upload PLC code
+
+I use these devices for my fermenter glycol chiller controller and walk in cooler.  Example code can be found in samplecode
+
+
+The latest release should be available at http://webcontrol.gnuinter.net
+
+To install:
+	perl Makefile.PL
+	make all
+	make install

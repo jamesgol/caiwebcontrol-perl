@@ -1,0 +1,312 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>CAI WebControl PLC</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="api/NetDevAPI.js"></script>
+<script type="text/javascript" src="api/ajax.js"></script>
+<script type="text/javascript" src="api/assembler.js"></script>
+<script type="text/javascript" src="api/encoding.js"></script>
+<script type="text/javascript" src="api/helpers.js"></script>
+<script type="text/javascript" src="help/help.js"></script>
+<script type="text/javascript" src="help/version.js"></script>
+
+<style type="text/css">
+<!--
+.style1 {color: #FFFFFF}
+-->
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div id="title">
+		  <div class="right">CAI WebControl PLC </div>
+    <p><span id="hello">&nbsp;</span></p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+	  
+	
+	<div id="attributes">
+	  <table width="100%" border="0" bordercolor="#FFFFFF" bgcolor="#0066FF">
+			<tr>
+			  <td width="271" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="version">Version: v03.02.11</span></div></td>
+   			  <td width="359" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">IpAddress: 192.168.1.15</span></div></td>
+			  <td width="417" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">Name: WEBCONTROL     </span></div></td> 
+			  <td width="191" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="date">10/14/2011</span></div></td>
+			  <td width="176" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="time">12:04:54</span></div></td>
+			</tr>
+	  </table>
+		</div>
+	</div>
+
+	<div id="page">
+	  <div class="center">System Status</div>
+	</div>
+
+	<div id="menu">
+	<a href="/index.htm">System Status</a>
+	<a href="/opctrl.htm">Output Control</a>
+	<a href="/x10ctrl.htm">x10 Control</a>
+	<a href="/iosetup.htm">I/O Setup</a>
+	<a href="/email.htm">Email Setup</a>
+	<a href="/tmpsnsrcfg.htm">Temperature Sensor Setup</a>
+	<a href="/plc.htm">PLC Program</a>
+	<a href="/boardsetup.htm">General Setup</a>
+	<a href="/netcfg.htm">Network Setup</a>
+	<a href="javascript:showHelp('http://www.cainetworks.com/products/webcontrol/index.html')">Help</a>
+	</div>
+
+
+
+
+
+<!-- content -->
+
+	<p>&nbsp;</p>
+	<div style="margin-left: 250px; margin-right: 10px;"><table width="53%" height="14%" border="1">
+	  <tr>
+		<th height="10%" colspan="9" class="style42" scope="col"> Outputs </th>
+	  </tr>
+	  <tr>
+		<td width="24%" height="28" nowrap="nowrap">&nbsp;</td>
+		<td width="9%"><div align="center" class="style43"><strong>1 </strong></div></td>
+		<td width="9%"><div align="center" class="style43"><strong>2 </strong></div></td>
+		<td width="9%"><div align="center" class="style43"><strong>3 </strong></div></td>
+		<td width="9%"><div align="center" class="style43"><strong>4 </strong></div></td>
+		<td width="9%"><div align="center" class="style43"><strong>5 </strong></div></td>
+		<td width="10%"><div align="center" class="style43"><strong>6 </strong></div></td>
+		<td width="10%"><div align="center" class="style43"><strong>7 </strong></div></td>
+		<td width="11%"><div align="center" class="style43"><strong>8 </strong></div></td>
+	  </tr>
+	  <tr>
+		<td height="10%" nowrap="nowrap" class="style42"><strong>TTL Output Bits</strong></td>
+		<td><div align="center" class="style44" id="ttloutput1">0</div></td>
+		<td><div align="center" class="style44" id="ttloutput2">0</div></td>
+		<td><div align="center" class="style44" id="ttloutput3">0</div></td>
+		<td><div align="center" class="style44" id="ttloutput4">0</div></td>
+		<td><div align="center" class="style44" id="ttloutput5">0</div></td>
+		<td><div align="center" class="style44" id="ttloutput6">0</div></td>
+		<td><div align="center" class="style44" id="ttloutput7">0</div></td>
+		<td><div align="center" class="style44" id="ttloutput8">0</div></td>
+	  </tr>
+	  
+	  <tr>
+		<td height="10%" nowrap="nowrap" class="style42"><strong>32 Bit Signed Vars </strong></td>
+		<td><div align="center" class="style44" id="var1">0</div></td>
+		<td><div align="center" class="style44" id="var2">0</div></td>
+		<td><div align="center" class="style44" id="var3">0</div></td>
+		<td><div align="center" class="style44" id="var4">0</div></td>
+		<td><div align="center" class="style44" id="var5">0</div></td>
+		<td><div align="center" class="style44" id="var6">0</div></td>
+		<td><div align="center" class="style44" id="var7">0</div></td>
+		<td><div align="center" class="style44" id="var8">0</div></td>
+	  </tr>
+	</table>
+	</div>
+
+	<p>&nbsp;</p>
+	<div style="margin-left: 250px; margin-right: 10px;"><table width="67%" height="28%" border="1">
+	  <tr>
+		<th height="10%" colspan="9" class="style42" scope="col"> Inputs </th>
+	  </tr>
+	  <tr>
+		<td width="25%" height="30">&nbsp;</td>
+		<td width="11%"><div align="center" class="style43"><strong>1 </strong></div></td>
+		<td width="10%"><div align="center" class="style43"><strong>2 </strong></div></td>
+		<td width="10%"><div align="center" class="style43"><strong>3 </strong></div></td>
+		<td width="10%"><div align="center" class="style43"><strong>4 </strong></div></td>
+		<td width="9%"><div align="center" class="style43"><strong>5 </strong></div></td>
+		<td width="9%"><div align="center" class="style43"><strong>6 </strong></div></td>
+		<td width="8%"><div align="center" class="style43"><strong>7 </strong></div></td>
+		<td width="8%"><div align="center" class="style43"><strong>8 </strong></div></td>
+	  </tr>
+	  <tr>
+		<td height="10%" nowrap="nowrap" class="style42"><strong>TTL Input Bits </strong></td>
+		<td><div align="center" class="style44" id="ttlinput1">0</div></td>
+		<td><div align="center" class="style44" id="ttlinput2">0</div></td>
+		<td><div align="center" class="style44" id="ttlinput3">0</div></td>
+		<td><div align="center" class="style44" id="ttlinput4">0</div></td>
+		<td><div align="center" class="style44" id="ttlinput5">0</div></td>
+		<td><div align="center" class="style44" id="ttlinput6">0</div></td>
+		<td><div align="center" class="style44" id="ttlinput7">0</div></td>
+		<td><div align="center" class="style44" id="ttlinput8">0</div></td>
+	  </tr>
+	  
+	  <tr>
+		<td height="10%" nowrap="nowrap" class="style42"><strong>Temperature Sensors </strong></td>
+		<td><div align="center" class="style44" id="ts1">unbound</div></td>
+		<td><div align="center" class="style44" id="ts2">unbound</div></td>
+		<td><div align="center" class="style44" id="ts3">unbound</div></td>
+		<td><div align="center" class="style44" id="ts4">unbound</div></td>
+		<td><div align="center" class="style44" id="ts5">unbound</div></td>
+		<td><div align="center" class="style44" id="ts6">unbound</div></td>
+		<td><div align="center" class="style44" id="ts7">unbound</div></td>
+		<td><div align="center" class="style44" id="ts8">unbound</div></td>
+	  </tr>
+	  <tr>
+		<td height="10%" nowrap="nowrap" class="style42"><strong>Temperature Sensor Status </strong></td>
+		<td><div align="center" id="tstat1">unbound</div></td>
+		<td><div align="center" id="tstat2">unbound</div></td>
+		<td><div align="center" id="tstat3">unbound</div></td>
+		<td><div align="center" id="tstat4">unbound</div></td>
+		<td><div align="center" id="tstat5">unbound</div></td>
+		<td><div align="center" id="tstat6">unbound</div></td>
+		<td><div align="center" id="tstat7">unbound</div></td>
+		<td><div align="center" id="tstat8">unbound</div></td>
+	  </tr>
+	  <tr>
+		<td height="10%" nowrap="nowrap" class="style42"><strong>Analog Inputs </strong></td>
+		<td><div align="center" class="style44" id="aip1">1</div></td>
+		<td><div align="center" class="style44" id="aip2">2</div></td>
+		<td><div align="center" class="style44" id="aip3">3</div></td>
+		<td><div align="center" class="style44" id="aip4">0</div></td>
+		<td><div align="center" class="style44" id="aip5">0</div></td>
+		<td><div align="center" class="style44" id="aip6">0</div></td>
+		<td><div align="center" class="style44" id="aip7">0</div></td>
+		<td><div align="center" class="style44" id="aip8">0</div></td>
+	  </tr>
+	  <tr>
+		<td height="28" nowrap="nowrap" class="style42"><strong>Humidity Sensor </strong></td>
+		<td colspan="3"><div align="center" class="style44" id="hs1">0 %</div></td>
+	  </tr>
+	</table>
+	</div>
+
+	<p>&nbsp;</p>
+	<div style="margin-left: auto; margin-right: auto; text-align:center">
+		<input id="sendBtn" type="button" name="Button" value="Refresh"  onclick="NetDevAPI.getBoardStatus(statusUpdate)"/>
+	</div>
+	
+	<div class="push"></div>
+</div>
+
+
+<!-- 
+ *
+ * script to handle real time status updates 
+ */
+ -->
+<script type="text/javascript">
+function statusUpdate(statusXML)
+{
+	if(statusXML != null)
+	{
+		for(i = 1; i<=NUM_TTL_OUTPUTS; i++)
+		{
+			var id = document.getElementById('ttloutput' + i);
+			if(id)
+			{
+				id.innerHTML = getXMLValue(statusXML, 'op' + i);
+			}
+		}
+	
+		for(i = 1; i<=NUM_TTL_INPUTS; i++)
+		{	
+			var id = document.getElementById('ttlinput' + i);
+			if(id)
+			{
+				id.innerHTML = getXMLValue(statusXML, 'ip' + i);
+			}
+		}
+	
+		for(i = 1; i<=NUM_OF_VARS; i++)
+		{
+			var id = document.getElementById('var' + i);
+			if(id)
+			{
+				id.innerHTML = getXMLValue(statusXML, 'var' + i);
+			}
+		}
+	
+	
+		for(i = 1; i<=NUM_OF_TEMPERATURE_SENSORS; i++)
+		{
+			var id = document.getElementById('ts' + i);
+			if(id)
+			{
+				var t = getXMLValue(statusXML, 'ts' + i);
+				if(t != "unbound")
+					t = t.replace("d", '°');
+					
+				id.innerHTML = t;
+			}
+			
+			id = document.getElementById('tstat' + i);
+			if(id)
+			{
+				id.innerHTML = getXMLValue(statusXML, 'tstat' + i);
+			}
+		}
+	
+	
+		for(i = 1; i<=NUM_OF_HUMIDITY_SENSORS; i++)
+		{
+			var id = document.getElementById('hs' + i);
+			if(id)
+			{
+				id.innerHTML = getXMLValue(statusXML, 'hs' + i);
+			}
+		}
+	
+		for(i = 1; i<=NUM_OF_ANALOG_INPUTS; i++)
+		{
+			var id = document.getElementById('aip' + i);
+			if(id)
+			{
+				id.innerHTML = getXMLValue(statusXML, 'aip' + i);
+			}
+		}
+	
+		var id = document.getElementById('date');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'date');
+		}
+		
+		var id = document.getElementById('time');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'time');
+		}
+	}
+	
+	if(PollingEnabled)
+	{
+		setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 250);
+	}
+
+}
+
+/* kicks off polling of status if polling is enabled */
+var PollingEnabled = false;
+function genCfgCallback(cfg)
+{
+	if(cfg != null)
+	{
+		PollingEnabled = cfg.getAjaxPolling();
+		if(cfg.getAjaxPolling())
+		{
+			setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+		}
+	}
+}
+
+window.onload = function()
+{
+	NetDevAPI.getGeneralConfig(genCfgCallback);	// to get the polling configuration
+}
+
+</script>
+
+<div class="spacer">&nbsp;</div>
+<div id="footer" align="center">Copyright &copy; 2008-2012 CAI Networks, Inc.</div>
+</body>
+<HEAD>
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+</HEAD>
+</html>

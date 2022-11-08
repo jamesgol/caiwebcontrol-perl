@@ -1,0 +1,188 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>CAI WebControl PLC</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="api/NetDevAPI.js"></script>
+<script type="text/javascript" src="api/ajax.js"></script>
+<script type="text/javascript" src="api/assembler.js"></script>
+<script type="text/javascript" src="api/encoding.js"></script>
+<script type="text/javascript" src="api/helpers.js"></script>
+<script type="text/javascript" src="help/help.js"></script>
+<script type="text/javascript" src="help/version.js"></script>
+
+<style type="text/css">
+<!--
+.style1 {color: #FFFFFF}
+-->
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div id="title">
+		  <div class="right">CAI WebControl PLC </div>
+    <p><span id="hello">&nbsp;</span></p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+	  
+	
+	<div id="attributes">
+	  <table width="100%" border="0" bordercolor="#FFFFFF" bgcolor="#0066FF">
+			<tr>
+			  <td width="271" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="version">Version: v03.02.11</span></div></td>
+   			  <td width="359" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">IpAddress: 192.168.1.15</span></div></td>
+			  <td width="417" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">Name: WEBCONTROL     </span></div></td> 
+			  <td width="191" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="date">10/14/2011</span></div></td>
+			  <td width="176" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="time">12:05:10</span></div></td>
+			</tr>
+	  </table>
+		</div>
+	</div>
+
+	<div id="page">
+	  <div class="center">Output Control</div>
+	</div>
+
+	<div id="menu">
+	<a href="/index.htm">System Status</a>
+	<a href="/opctrl.htm">Output Control</a>
+	<a href="/x10ctrl.htm">x10 Control</a>
+	<a href="/iosetup.htm">I/O Setup</a>
+	<a href="/email.htm">Email Setup</a>
+	<a href="/tmpsnsrcfg.htm">Temperature Sensor Setup</a>
+	<a href="/plc.htm">PLC Program</a>
+	<a href="/boardsetup.htm">General Setup</a>
+	<a href="/netcfg.htm">Network Setup</a>
+	<a href="javascript:showHelp('http://www.cainetworks.com/products/webcontrol/index.html')">Help</a>
+	</div>
+
+
+
+
+
+<!-- content -->
+  <div align="center" style="margin-right:170px">
+		<table width="418" border="1">
+          <tr>
+            <th colspan="3" scope="col"><div align="center" class="style38">TTL Outputs</div></th>
+          </tr>
+          <tr>
+            <td width="102"><div align="center" class="style38">On</div></td>
+            <td width="113"><div align="center" class="style38">Off</div></td>
+            <td width="181"><div align="center" class="style38">Current State </div></td>
+          </tr>
+          <tr>
+            <td height="28"><div align="center"><input name="Button" type="button" value="TTL1 ON"  onclick="NetDevAPI.setTTLOutput(1, 1);"/></div></td>
+            <td><div align="center"><input type="button" value="TTL1 OFF" onClick="NetDevAPI.setTTLOutput(1, 0);"/></div></td>
+            <td><div align="center" id="op1"><span class="style48">0</span></div></td>
+          </tr>
+          <tr>
+            <td height="28"><div align="center"><input name="Button" type="button" value="TTL2 ON"  onclick="NetDevAPI.setTTLOutput(2, 1);"/></div></td>
+            <td><div align="center"><input type="button" value="TTL2 OFF" onClick="NetDevAPI.setTTLOutput(2, 0);"/></div></td>
+            <td><div align="center" id="op2"><span class="style48">0</span></div></td>
+          </tr>
+          <tr>
+            <td height="28"><div align="center"><input name="Button" type="button" value="TTL3 ON"  onclick="NetDevAPI.setTTLOutput(3, 1);"/></div></td>
+            <td><div align="center"><input type="button" value="TTL3 OFF" onClick="NetDevAPI.setTTLOutput(3, 0);"/></div></td>
+            <td><div align="center" id="op3"><span class="style48">0</span></div></td>
+          </tr>
+          <tr>
+            <td height="28"><div align="center"><input name="Button" type="button" value="TTL4 ON"  onclick="NetDevAPI.setTTLOutput(4, 1);"/></div></td>
+            <td><div align="center"><input type="button" value="TTL4 OFF" onClick="NetDevAPI.setTTLOutput(4, 0);"/></div></td>
+            <td><div align="center" id="op4"><span class="style48">0</span></div></td>
+          </tr>
+          <tr>
+            <td height="28"><div align="center"><input name="Button" type="button" value="TTL5 ON"  onclick="NetDevAPI.setTTLOutput(5, 1);"/></div></td>
+            <td><div align="center"><input type="button" value="TTL5 OFF" onClick="NetDevAPI.setTTLOutput(5, 0);"/></div></td>
+            <td><div align="center" id="op5"><span class="style48">0</span></div></td>
+          </tr>
+          <tr>
+            <td height="28"><div align="center"><input name="Button" type="button" value="TTL6 ON"  onclick="NetDevAPI.setTTLOutput(6, 1);"/></div></td>
+            <td><div align="center"><input type="button" value="TTL6 OFF" onClick="NetDevAPI.setTTLOutput(6, 0);"/></div></td>
+            <td><div align="center" id="op6"><span class="style48">0</span></div></td>
+          </tr>
+          <tr>
+            <td height="28"><div align="center"><input name="Button" type="button" value="TTL7 ON"  onclick="NetDevAPI.setTTLOutput(7, 1);"/></div></td>
+            <td><div align="center"><input type="button" value="TTL7 OFF" onClick="NetDevAPI.setTTLOutput(7, 0);"/></div></td>
+            <td><div align="center" id="op7"><span class="style48">0</span></div></td>
+          </tr>
+          <tr>
+            <td height="28"><div align="center"><input name="Button" type="button" value="TTL8 ON"  onclick="NetDevAPI.setTTLOutput(8, 1);"/></div></td>
+            <td><div align="center"><input type="button" value="TTL8 OFF" onClick="NetDevAPI.setTTLOutput(8, 0);"/></div></td>
+            <td><div align="center" id="op8"><span class="style48">0</span></div></td>
+          </tr>  
+        </table>
+    <p>&nbsp;</p>
+	    <p>
+	      <label>
+	      <input type="button" name="Button" value="Save States" onclick="NetDevAPI.saveTTLOutputSates();" style="width:200px; height:100px"/>
+	      </label>
+	    </p>
+  </div>
+	
+	<div class="push"></div>
+</div>
+
+<script type="text/javascript">
+
+function statusUpdate(statusXML)
+{
+	if(statusXML != null)
+	{
+		for(i = 1; i<=NUM_TTL_OUTPUTS; i++)
+		{
+			var id = document.getElementById('op' + i);
+			if(id)
+			{
+				id.innerHTML = getXMLValue(statusXML, 'op' + i);
+			}
+		}
+		
+		var id = document.getElementById('date');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'date');
+		}
+		
+		var id = document.getElementById('time');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'time');
+		}
+	}
+
+	setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 250);
+}
+
+function genCfgCallback(cfg)
+{
+	if(cfg != null)
+	{
+		if(cfg.getAjaxPolling())
+		{
+			NetDevAPI.getBoardStatus(statusUpdate);
+		}
+	}
+}
+
+window.onload = function()
+{
+	NetDevAPI.getGeneralConfig(genCfgCallback);
+}
+
+
+</script>
+
+<div class="spacer">&nbsp;</div>
+<div id="footer" align="center">Copyright &copy; 2008-2012 CAI Networks, Inc.</div>
+</body>
+<HEAD>
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+</HEAD>
+</html>
+

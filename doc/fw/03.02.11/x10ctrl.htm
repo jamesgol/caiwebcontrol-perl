@@ -1,0 +1,226 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>CAI WebControl PLC</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="api/NetDevAPI.js"></script>
+<script type="text/javascript" src="api/ajax.js"></script>
+<script type="text/javascript" src="api/assembler.js"></script>
+<script type="text/javascript" src="api/encoding.js"></script>
+<script type="text/javascript" src="api/helpers.js"></script>
+<script type="text/javascript" src="help/help.js"></script>
+<script type="text/javascript" src="help/version.js"></script>
+
+<style type="text/css">
+<!--
+.style1 {color: #FFFFFF}
+-->
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div id="title">
+		  <div class="right">CAI WebControl PLC </div>
+    <p><span id="hello">&nbsp;</span></p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+	  
+	
+	<div id="attributes">
+	  <table width="100%" border="0" bordercolor="#FFFFFF" bgcolor="#0066FF">
+			<tr>
+			  <td width="271" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="version">Version: v03.02.11</span></div></td>
+   			  <td width="359" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">IpAddress: 192.168.1.15</span></div></td>
+			  <td width="417" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">Name: WEBCONTROL     </span></div></td> 
+			  <td width="191" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="date">10/14/2011</span></div></td>
+			  <td width="176" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="time">12:05:12</span></div></td>
+			</tr>
+	  </table>
+	</div>
+  </div>
+
+	<div id="page">
+	  <div class="center">X10 Control</div>
+	</div>
+
+	<div id="menu">
+	<a href="/index.htm">System Status</a>
+	<a href="/opctrl.htm">Output Control</a>
+	<a href="/x10ctrl.htm">x10 Control</a>
+	<a href="/iosetup.htm">I/O Setup</a>
+	<a href="/email.htm">Email Setup</a>
+	<a href="/tmpsnsrcfg.htm">Temperature Sensor Setup</a>
+	<a href="/plc.htm">PLC Program</a>
+	<a href="/boardsetup.htm">General Setup</a>
+	<a href="/netcfg.htm">Network Setup</a>
+	<a href="http://www.cainetworks.com/products/webcontrol/WebControlX10.pdf" target="X10-help">Help</a>
+	</div>
+
+
+
+
+
+<!-- content -->
+  <div align="center" style="margin-right:170px">
+		<p>&nbsp;</p>
+		<p>&nbsp;</p>
+		<table width="656" border="1">
+          <tr>
+            <td width="177" height="66"><div align="center" class="style38"><strong>House Code
+                0 - F
+                </strong>
+                <label><input name="textfield" type="text" id="houseCode" maxlength="2" />
+              </label>
+            </div></td>
+            <td width="161"><div align="center" class="style38"><strong>Unit Code
+                0 - F</strong>
+                <label><input name="textfield2" type="text" id="unitCode" maxlength="2" />
+              </label>
+            </div></td>
+            <td width="61"><label>
+              <div align="center">
+                <input type="submit" name="Submit2" value="On" onclick="onSend('on');"/>
+              </div>
+            </label></td>
+            <td width="81"><label>
+              <div align="center">
+                <input type="submit" name="Submit3" value="Off" onclick="onSend('off');"/>
+              </div>
+            </label></td>
+            <td width="68"><div align="center">
+              <input type="submit" name="Submit" value="Bright" onclick="onSend('bright');"/>
+            </div></td>
+            <td width="68"><div align="center" class="style38">
+              <label></label>
+              <input type="submit" name="Submit4" value="Dim" onclick="onSend('dim');"/>
+            </div></td>
+          </tr>  
+        </table>
+    <p>&nbsp;</p>
+	    <p>
+      <label></label>
+    </p>
+	    <p><label id="x10Status"></label>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+	    <p>&nbsp;</p>
+  </div>
+	
+	<div class="push"></div>
+</div>
+
+<script type="text/javascript">
+
+function onSend(cmd)
+{	
+	try
+	{
+		if(!x10enabled) throw "x10 is disabled";
+		
+		var unitCode = document.getElementById('unitCode').value;
+		var houseCode = document.getElementById('houseCode').value;
+			
+		NetDevAPI.sendX10(houseCode, unitCode, cmd);
+	}
+	catch(error)
+	{
+		alert(error);
+	}
+}
+
+function statusUpdate(statusXML)
+{
+	if(statusXML != null)
+	{
+		for(i = 1; i<=NUM_TTL_OUTPUTS; i++)
+		{
+			var id = document.getElementById('op' + i);
+			if(id)
+			{
+				id.innerHTML = getXMLValue(statusXML, 'op' + i);
+			}
+		}
+		
+		var id = document.getElementById('date');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'date');
+		}
+		
+		var id = document.getElementById('time');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'time');
+		}
+	}
+
+	setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 250);
+}
+
+var x10enabled = false;
+function getIoCfgCallback(cfg)
+{
+	if(cfg != null)
+	{
+		var ioConfig = cfg;
+		
+		x10enabled = ioConfig.getX10Enabled();
+	
+		document.getElementById('x10Status').innerHTML = (x10enabled == true) ? "x10 is enabled" : "x10 is disabled";
+	}
+}
+
+function genCfgCallback(cfg)
+{
+	if(cfg != null)
+	{
+		if(cfg.getAjaxPolling())
+		{
+			NetDevAPI.getBoardStatus(statusUpdate);
+		}
+	}
+}
+
+window.onload = function()
+{
+	NetDevAPI.getGeneralConfig(genCfgCallback);
+	NetDevAPI.getIoCtrlConfig(getIoCfgCallback);
+}
+
+
+</script>
+<form id="form1" method="post" action="">
+  <p>&nbsp;</p>
+</form>
+
+<div class="spacer">&nbsp;</div>
+<div id="footer" align="center">Copyright &copy; 2008-2012 CAI Networks, Inc.</div>
+</body>
+<HEAD>
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+</HEAD>
+</html>
+

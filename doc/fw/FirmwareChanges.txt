@@ -1,0 +1,9 @@
+I am not aware of another list of changes between each version of CAI 
+Networks Webcontrol firmware, so I'm going to try to keep track here.  As 
+I discover them I'll update this file
+
+03.02.11 Released around 12/19/2011
+	Added UROM1..4 Variables that are setable via web interface and persist across reboots
+	Added CTS code which is seconds since (3/22/2000?), useful for PLC code to only execute an action after a certain amount of time has passed
+
+03.02.09

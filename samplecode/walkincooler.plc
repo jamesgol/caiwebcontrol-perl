@@ -1,0 +1,178 @@
+#fermcontroller.plc version 0.01
+#Written by: James Golovich <james@gnuinter.net>
+
+# TODO
+# Add config flags.  FV specific: heat only, cool only, both
+# Don't open cool solenoids unless return temp is under current temp
+
+
+
+#OP1 FV1HEATOP
+#OP2 FV2HEATOP
+#OP3 GLYCOLPUMPOP
+#OP4 hooked to AC plug for future use
+#OP5 GLYCOLCOOLOP When ON AC thinks the temp is 90, when OFF the AC thinks the temp is 60
+#OP6 FV2COOLOP
+#OP7 FV1COOLOP
+#OP8 hooked to solenoid for future use
+
+#UROM1 FV1SETVAR
+#UROM2 FV2SETVAR
+#UROM3 GLYCOLSETVAR
+#UROM4
+
+#VAR1 DEBUGVAR1
+#VAR2 GLYCOLCOOLSTARTTIME Time when glycol cooler was started
+#VAR3 FV1TEMP
+#VAR4 FV2TEMP
+#VAR5 FV1STEPVAR
+#VAR6 FV2STEPVAR
+#VAR7 STEPVAR
+#VAR8 STARTUPTIME
+
+#RAM1 FV1SETOLDVAR Used for detecting when FV1SETVAR has changed
+#RAM2 FV2SETOLDVAR Used for detecting when FV2SETVAR has changed
+#RAM3 LASTALERTTIME
+#RAM4 GLYCOLPUMPSTOPTIME CTS when pump should stop
+#RAM5 TEMPVAR1 Used for calculations
+#RAM6 TEMPVAR2 Used for calculations
+#RAM7 SUBPARAM1 Used for passing variable to subroutines (always try to initialize to value when you need it and set to 0 when done with it)
+#RAM8 RETVAR1 Used for passing variable from subroutines
+
+#T1 FV1UPPERTEMP
+#T2 FV1LOWERTEMP
+#T3 FV2UPPERTEMP
+#T4 FV2LOWERTEMP
+#T5 GLYCOLTEMP 28FF403B0200
+#T6 GLYCOLRETURNTEMP 2892774A0200
+#T7 ROOMTEMP 2848694A0200 temp probe in garage
+#T8 
+
+$ROOMTEMP = T7
+$ROOMTEMPSTATE = TS7
+
+
+
+#IP8 is hardwired to switch on control box (override everything)
+$OVERRIDESWITCH = IP8
+
+#INC is incubator that heats only
+$INCSETVAR = UROM4
+$INCTEMP = T7
+$INCTEMPSTATE = TS7
+$INCHEATOP = OP4
+
+$FV1SETVAR = UROM1
+$FV1SETOLDVAR = RAM1
+$FV1TEMP = VAR3
+$FV1UPPERTEMP = T1
+$FV1LOWERTEMP = T2
+$FV1UPPERTEMPSTATE = TS1
+$FV1LOWERTEMPSTATE = TS2
+$FV1STEPVAR = VAR5
+$FV1HEATOP = OP1
+$FV1COOLOP = OP7
+
+$FV2SETVAR = UROM2
+$FV2SETOLDVAR = RAM2
+$FV2TEMP = VAR4
+$FV2UPPERTEMP = T3
+$FV2LOWERTEMP = T4
+$FV2UPPERTEMPSTATE = TS3
+$FV2LOWERTEMPSTATE = TS4
+$FV2STEPVAR = VAR6
+$FV2HEATOP = OP2
+$FV2COOLOP = OP6
+
+$GLYCOLSETVAR = UROM3
+$GLYCOLTEMP = T5
+$GLYCOLTEMPSTATE = TS5
+$GLYCOLRETURNTEMP = T6
+$GLYCOLRETURNTEMPSTATE = TS6
+$GLYCOLPUMPOP = OP3
+$GLYCOLCOOLOP = OP5
+$GLYCOLCOOLDIFF = 10  # tenths of degrees differential for glycol cooling
+$GLYCOLCOOLSTARTTIME = VAR2
+# Below features unimplemented
+$GLYCOLCOOLMAXTIME = 60 # in seconds, how long the glycol chiller can run
+$GLYCOLCOOLINTERVAL = 10 # multiplier of $GLYCOLCOOLMAXTIME for minimum time between cool cycles
+
+$GLYCOLPUMPSTOPTIME = RAM4	# CTS when pump should stop
+$GLYCOLPUMPCYCLEINTERVAL = 14400	# in seconds, run glycol pump at least this often
+$GLYCOLPUMPCYCLETIME = 30	# in seconds, how long pump should run after it is needed
+
+$HEATDIFF = 10
+$HEATSTEPDEG = 1  #tenths of degrees
+$HEATSTEPTIME = 360000  # in milliseconds
+
+$COOLDIFF = 5
+$COOLSTEPDEG = 1  # tenths of degrees
+$COOLSTEPTIME = 360000 # in millseconds
+
+$FVDISABLED = 54321  # If set temp is this then a FV is considered disabled
+$STEPVAR = VAR7  # User can set this to enable stepping of temps
+$STEPDISABLED = 0 # Step disabled
+$STEPENABLED = 1 # Step for heat and cool
+$STEPCOOLONLY = 2 # Step for only cool  (TODO)
+$STEPHEATONLY = 3 # Step for only heat  (TODO)
+
+$TEMPVAR1 = RAM5
+$TEMPVAR2 = RAM6
+$SUBPARAM1 = RAM7
+$RETVAR1 = RAM8
+$DEBUGVAR1 = VAR1
+$STARTUPTIME = VAR8
+
+$LASTALERTTIME = RAM3
+$ALERTINTERVAL = 600	# Wait this many seconds between sending alerts
+
+
+START
+
+#	TSTEQ $OVERRIDESWITCH 1 	# If $OVERRIDESWITCH is open
+#	GOTO CLRALL
+	# Check if override switch is set
+	CALLSUB CHKGLYCOL
+	END    
+
+CLRALL:
+	SET OP1 0
+	SET OP2 0
+	SET OP3 0
+	SET OP4 0
+	SET OP5 0
+	SET OP6 0
+	SET OP7 0
+	SET OP8 0
+	GOTO START
+	RET
+
+CHKGLYCOL:
+	SET $SUBPARAM1 EM2			# Set param to EM2 which is "bad sensor" message
+
+#	BZ $GLYCOLTEMPSTATE CLRGLYCOL		# If temp sensor state is 0 (bad sensor) stop controlling
+
+	TSTEQ $GLYCOLSETVAR $FVDISABLED
+	GOTO CLRGLYCOL
+
+	#TODO When seconds since epoch is available check last time 
+	#compressor was run so we dont run too often
+
+	#We never step glycol, but we do use differential to set temp
+	ADD $GLYCOLSETVAR $GLYCOLCOOLDIFF $TEMPVAR1 
+	TSTGT $GLYCOLTEMP $TEMPVAR1
+	SET $GLYCOLCOOLOP 1		# Cool on
+
+	#We never step glycol, but we do use differential to set temp
+	SUB $GLYCOLSETVAR $GLYCOLCOOLDIFF $TEMPVAR1 
+#	TSTLE $GLYCOLTEMP $GLYCOLSETVAR
+	TSTLE $GLYCOLTEMP $TEMPVAR1
+	SET $GLYCOLCOOLOP 0		# Cool off
+
+	SET $SUBPARAM1 0			# Unset $SUBPARAM1	
+	RET
+
+
+CLRGLYCOL:
+	SET $GLYCOLCOOLOP 0
+RET

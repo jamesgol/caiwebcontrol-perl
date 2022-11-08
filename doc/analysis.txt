@@ -1,0 +1,32 @@
+ICSD header:
+pin 1: PGD
+pin 2: PGC
+pin 3: GND
+pin 4: MCLR
+pin 5: Vdd
+
+
+pin1 -> pin 20 on U5/LVX4245 (B1)
+pin2 -> pin 21 on U5/LVX4245 (B0)
+pin3 -> pin 19 on U5/LVX4245 (B2)
+pin4 -> pin 18 on U5/LVX4245 (B3)
+pin5 -> pin 17 on U5/LVX4245 (B4)
+pin6 -> pin 16 on U5/LVX4245 (B5)
+pin44 -> pin 15 on U5/LVX4245 (B6)
+pin43 -> pin 14 on U5/LVX4245 (B7)
+
+
+C10 -> R11 -> pin 2 on temp connector (data)
+pin18 -> C7 -> D9 -> pin3 on temp connector (+5V)
+pin23 -> Ethernet LEDB indicator output
+pin24 -> Ethernet LEDA indicator output
+pin27 -> R12 -> pin2 on humidity connector
+pin29 -> R2 -> D3 (blinking LED)
+pin33 -> pin1 on SST25VF040B (CE#)
+pin34 -> pin6 on SST25VF040B (SCK)
+pin35 -> pin2 on SST25VF040B (SO)
+pin36 -> pin5 on SST25VF040B (SI)
+pin39 -> X1/25.000H8B (clock)
+pin40 -> X1/25.000H8B  (clock)
+pin58 -> J8 (reset)
+

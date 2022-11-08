@@ -1,0 +1,18 @@
+Come up with a standard error interface, die'ng isn't user friendly to a web app
+
+Move all the meat of the caiwebcontrol script to CAIWebcontrol.pm so it can be called from the script or something else
+
+Add tests that cover different versions of firmware
+
+Add parsing for Network setup
+
+Add parsing for temperature setup
+
+Add parsing for email setup
+
+Add parsing for I/O setup
+
+Add parsing for x10 Control
+
+Add backup/restore functionality
+	Could get tricky if someone trys to switch between versions

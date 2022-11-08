@@ -1,0 +1,535 @@
+#!/usr/bin/perl
+
+use lib "./lib";
+use CAIWebcontrol::PLC;
+use LWP::UserAgent;
+use Getopt::Long;
+use Getopt::ArgvFile home=>1;
+use XML::Simple;
+use Switch;
+use File::Slurp;
+use RRDs;
+
+my $NUMSENSORS = 7; # 8 sensors counting from 0
+my $VERSION = "0.01";
+
+my @GRAPHCOLORS = ('#0000FF', '#FF0000', '#00FF00', '#FFFF00', '#9370DB');
+
+
+
+my $host;
+my $username;
+my $password;
+my $verbose = 0;
+my @graphs;
+my @data;
+my $rrdpath = '.';
+my $graphpath = '.';
+my $fwversion;
+
+my $res = GetOptions(	"host=s" => \$host,
+			"username=s" => \$username,
+			"password=s" => \$password,
+		        "verbose+" => \$verbose,
+			"fwversion=s" => \$fwversion, #
+			"rrdpath=s" => \$rrdpath, # Where RRDs are stored
+			"graphpath=s" => \$graphpath, # Where generated graphs are stored
+			"graphs=s" => \@graphs, # Which graphs to generate
+			"data=s" => \@data, # Which data to store in RRDs (default is everything)
+			);
+
+@data = split(/,/, join(',', @data));
+
+print STDERR "Verbose: $verbose\n" if ($verbose);
+print STDERR "graphpath: $graphpath\n" if ($verbose);
+print STDERR "Host: $host\n" if ($verbose);
+foreach (@graphs) {
+	print STDERR "Graph: $_\n" if ($verbose);
+}
+
+foreach (@data) {
+	print STDERR "Data: $_\n" if ($verbose);
+}
+
+my $cmd = shift(@ARGV);
+if (!$cmd) {
+	show_help();
+	exit;
+}
+
+my $ua = LWP::UserAgent->new();
+$ua->agent("CAIWebcontrolPerl/$VERSION ");
+
+
+switch ($cmd) {
+	case 'showmacaddress' {
+		my $data = getdata_plc($host);	
+		print $data->{macaddr} . "\n";
+	}		
+	case 'showtempcodes' {
+		my $data = getdata_plc($host);	
+		foreach my $key (sort keys %{$data}) {
+			if ($key =~ /^romcode(\d*)$/) {
+				print $data->{$key} . "\n";
+			}
+		}
+	}
+	case 'showxmldata' {
+		my $res = $ua->get("http://$host/getall.cgi");
+		if ($res->is_success) {
+			print $res->decoded_content;
+		}
+	}
+	case 'showrawtempsensorsetup' {
+		my $getalldata = getdata_plc($host);
+		$fwversion = $getalldata->{'firmware'};
+		print STDERR "FWVersion: $fwversion\n" if ($verbose);
+		my $res = $ua->get("http://$host/api/tscfg.xml");
+		if ($res->is_success) {
+			my $xml = new XML::Simple;
+			my $data = $xml->XMLin($res->decoded_content);
+			print $data->{'data'};
+		}
+
+	}
+	case 'setrawtempsensorsetup' {
+		my $value = shift(@ARGV);
+		if (!defined($value)) {
+			die "setrawtempsensorsetup requires arguments VALUE";
+		}
+		my $getalldata = getdata_plc($host);
+		$fwversion = $getalldata->{'firmware'};
+
+		my $res = $ua->post("http://$host/api/tscfg.cgi", Content => "data=$value" );
+		if ($res->is_success) {
+			print $res->decoded_content;
+		} else {
+			print STDERR $res->status_line . "\n";
+		}
+
+	}		
+	case 'showgeneralsetup' {
+		my $getalldata = getdata_plc($host);
+		$fwversion = $getalldata->{'firmware'};
+		print STDERR "FWVersion: $fwversion\n" if ($verbose);
+		my $res = $ua->get("http://$host/api/gencfg.xml");
+		if ($res->is_success) {
+			my $xml = new XML::Simple;
+			my $data = $xml->XMLin($res->decoded_content);
+			my $PLC = new CAIWebcontrol::PLC($fwversion);
+			my $general = $PLC->decode_general($data->{'data'});
+			foreach (sort keys %{$general}) {
+				print "$_: " . $general->{$_} . "\n";
+			}
+		}
+
+	}
+	case 'setromvar' {
+		my $var = shift(@ARGV);
+		my $val = shift(@ARGV);
+		if (!defined($var) || !defined($val)) {
+			die "setromvar requires arguments VARID VALUE";
+		}
+		my $getalldata = getdata_plc($host);
+		$fwversion = $getalldata->{'firmware'};
+		my $res = $ua->get("http://$host/api/gencfg.xml");
+		if ($res->is_success) {
+			my $xml = new XML::Simple;
+			my $data = $xml->XMLin($res->decoded_content);
+			my $PLC = new CAIWebcontrol::PLC($fwversion);
+			my $general = $PLC->decode_general($data->{'data'});
+			$general->{"UROM$var"} = $val;
+			my $code = $PLC->encode_general($general);
+
+			my $res2 = $ua->post("http://$host/api/gencfg.cgi", Content => "data=$code" );
+			if ($res2->is_success) {
+				print $res2->decoded_content;
+			} else {
+				print STDERR $res2->status_line . "\n";
+			}
+		}
+
+	}		
+	case 'showboundtempcodes' {
+		my @codes;
+		my $data = getdata_plc($host);	
+		foreach my $key (sort keys %{$data}) {
+			if ($key =~ /^boundromcode(\d*)$/) {
+				if ($data->{$key} ne '000000000000') {
+					$codes[$1-1] = $data->{$key};
+				}
+			}
+		}
+		for (my $x = 0; $x <= $NUMSENSORS; $x++) {
+			if ($codes[$x]) {
+				my $id = $x+1;
+				print "T$id $codes[$x] " . $data->{"ts$id"} . " " . $data->{"tstat$id"} . "\n";
+			}
+		}
+	}
+	case 'getdata' {
+		# Get current data
+		my $data = getdata_plc($host);	
+		my $res = $ua->get("http://$host/api/gencfg.xml");
+		$fwversion = $getalldata->{'firmware'};
+		my $general;
+		if ($res->is_success) {
+			my $xml = new XML::Simple;
+			my $gendata = $xml->XMLin($res->decoded_content);
+			my $PLC = new CAIWebcontrol::PLC($fwversion);
+			$general = $PLC->decode_general($gendata->{'data'});
+		}
+		if (! -e "$rrdpath/$host.rrd") {
+			print STDERR "Creating RRD $rrdpath/$host.rrd\n" if ($verbose);
+			RRDs::create "$rrdpath/$host.rrd",
+					"-s 60",
+					"RRA:LAST:0.5:1:576",
+					"RRA:LAST:0.5:6:672",
+					"RRA:LAST:0.5:24:732",
+					"RRA:LAST:0.5:144:1460",
+					"RRA:AVERAGE:0.5:1:576",
+					"RRA:AVERAGE:0.5:6:672",
+					"RRA:AVERAGE:0.5:24:732",
+					"RRA:AVERAGE:0.5:144:1460",
+					"RRA:MIN:0.5:1:576",
+					"RRA:MIN:0.5:6:672",
+					"RRA:MIN:0.5:24:732",
+					"RRA:MIN:0.5:144:1460",
+					"RRA:MAX:0.5:1:576",
+					"RRA:MAX:0.5:6:672",
+					"RRA:MAX:0.5:24:732",
+					"RRA:MAX:0.5:144:1460",
+					"DS:t1:GAUGE:600:0:250",
+					"DS:t2:GAUGE:600:0:250",
+					"DS:t3:GAUGE:600:0:250",
+					"DS:t4:GAUGE:600:0:250",
+					"DS:t5:GAUGE:600:0:250",
+					"DS:t6:GAUGE:600:0:250",
+					"DS:t7:GAUGE:600:0:250",
+					"DS:t8:GAUGE:600:0:250",
+					"DS:op1:GAUGE:600:0:1",
+					"DS:op2:GAUGE:600:0:1",
+					"DS:op3:GAUGE:600:0:1",
+					"DS:op4:GAUGE:600:0:1",
+					"DS:op5:GAUGE:600:0:1",
+					"DS:op6:GAUGE:600:0:1",
+					"DS:op7:GAUGE:600:0:1",
+					"DS:op8:GAUGE:600:0:1",
+					"DS:var1:GAUGE:600:U:U",
+					"DS:var2:GAUGE:600:U:U",
+					"DS:var3:GAUGE:600:U:U",
+					"DS:var4:GAUGE:600:U:U",
+					"DS:var5:GAUGE:600:U:U",
+					"DS:var6:GAUGE:600:U:U",
+					"DS:var7:GAUGE:600:U:U",
+					"DS:var8:GAUGE:600:U:U",
+					"DS:ip1:GAUGE:600:0:1",
+					"DS:ip2:GAUGE:600:0:1",
+					"DS:ip3:GAUGE:600:0:1",
+					"DS:ip4:GAUGE:600:0:1",
+					"DS:ip5:GAUGE:600:0:1",
+					"DS:ip6:GAUGE:600:0:1",
+					"DS:ip7:GAUGE:600:0:1",
+					"DS:ip8:GAUGE:600:0:1",
+					"DS:aip1:GAUGE:600:0:100",
+					"DS:aip2:GAUGE:600:0:100",
+					"DS:aip3:GAUGE:600:0:100",
+					"DS:aip4:GAUGE:600:0:100",
+					"DS:aip5:GAUGE:600:0:100",
+					"DS:aip6:GAUGE:600:0:100",
+					"DS:aip7:GAUGE:600:0:100",
+					"DS:aip8:GAUGE:600:0:100",
+					"DS:urom1:GAUGE:600:U:U",
+					"DS:urom2:GAUGE:600:U:U",
+					"DS:urom3:GAUGE:600:U:U",
+					"DS:urom4:GAUGE:600:U:U";
+			if ($ERROR = RRDs::error) {
+				print STDERR "$0: unable to generate rrd: $ERROR\n";
+			}
+
+		}
+		my $updatestr = join(':', gettemp('1', $data), gettemp('2', $data), gettemp('3', $data), 
+					gettemp('4', $data), gettemp('5', $data), gettemp('6', $data),
+					gettemp('7', $data), gettemp('8', $data), $data->{'op1'},
+					$data->{'op2'}, $data->{'op3'}, $data->{'op4'}, $data->{'op5'},
+					$data->{'op6'}, $data->{'op7'}, $data->{'op8'}, $data->{'var1'},
+					$data->{'var2'}, $data->{'var3'}, $data->{'var4'}, $data->{'var5'},
+					$data->{'var6'}, $data->{'var7'}, $data->{'var8'}, $data->{'ip1'},
+					$data->{'ip2'}, $data->{'ip3'}, $data->{'ip4'}, $data->{'ip5'}, 
+					$data->{'ip6'}, $data->{'ip7'}, $data->{'ip8'}, $data->{'aip1'},
+					$data->{'aip2'}, $data->{'aip3'}, $data->{'aip4'}, $data->{'aip5'}, 
+					$data->{'aip6'}, $data->{'aip7'}, $data->{'aip8'},
+					$general->{'UROM1'}, $general->{'UROM2'}, $general->{'UROM3'},
+					$general{'UROM4'}
+					);
+		print STDERR "RRD Update string '$updatestr'\n" if ($verbose);
+		RRDs::update("$rrdpath/$host.rrd", "N:$updatestr");
+		if ($ERROR = RRDs::error) {
+			print STDERR "$0: unable to update rrd: $ERROR\n";
+		}
+		for (my $x = 0; $x <=$NUMSENSORS; $x++) {
+			my $type = "t" . ($x+1);
+			RRDs::graph("$graphpath/$type.png",
+					"-s -1day",
+					"-t $type",
+					"-h", "80", "-w", "600",
+					"-a", "PNG",
+					"--right-axis", "1:0",
+					"-v degrees F",
+					"DEF:$type=$rrdpath/$host.rrd:$type:AVERAGE",
+					"LINE2:$type#0000FF:day ($type)",
+					"GPRINT:$type:MIN:  Min\\: %2.1lf",
+					"GPRINT:$type:MAX:  Max\\: %2.1lf",
+					"GPRINT:$type:AVERAGE:  Avg\\: %1.1lf",
+					"GPRINT:$type:LAST: Current\\: %2.1lf degrees F\\n"
+					);
+			if ($ERROR = RRDs::error) {
+				print STDERR "$0: unable to generate $type graph from $rrdpath/$host.rrd: $ERROR\n";
+			}
+		}
+
+	}
+	case 'graphs' {
+		foreach my $str (@graphs) {
+			my $name;
+			my @vars;
+			if ($str =~ /(\w+)\=([\,\w]+)/) {
+				$name = $1;
+				@vars = split(/,/, $2);
+			} else {
+				$name = $str;
+				@vars = split(/,/, lc($str));
+			}
+			my @defs;
+			my $first = $vars[0];
+			for (my $x = 0; $x <= $#vars; $x++) {
+				my $type = $vars[$x];
+#				if ($type =~ /^t(\d*)$/) {
+					push(@defs, "DEF:$type=$rrdpath/$host.rrd:$type:AVERAGE");
+					push(@defs, "LINE2:$type" . $GRAPHCOLORS[$x] . ":day ($type)");
+#				}
+			}
+			RRDs::graph("$graphpath/$name.png",
+					"-s -1day",
+					"-t $name",
+					"-h", "80", "-w", "600",
+					"-a", "PNG",
+					"--right-axis", "1:0",
+					"-v degrees F",
+					@defs,
+					"GPRINT:$first:MIN:  Min\\: %2.1lf",
+					"GPRINT:$first:MAX:  Max\\: %2.1lf",
+					"GPRINT:$first:AVERAGE:  Avg\\: %1.1lf",
+					"GPRINT:$first:LAST: Current\\: %2.1lf degrees F\\n"
+					);
+			if ($ERROR = RRDs::error) {
+				print STDERR "$0: unable to generate $type graph from $rrdpath/$host.rrd: $ERROR\n";
+			}
+			
+		}
+	}
+	case 'setvar' {
+		my $var = shift(@ARGV);
+		my $val = shift(@ARGV);
+		if (!defined($var) || !defined($val)) {
+			die "setvar requires arguments VARID VALUE";
+		}
+
+		my $res = $ua->get("http://$host/api/setvar.cgi?varid=$var&value=$val");
+		if ($res->is_success) {
+			my $xml = new XML::Simple;
+			my $data = $xml->XMLin($res->decoded_content);
+		}
+	}		
+	case 'setoutput' {
+		my $var = shift(@ARGV);
+		my $val = shift(@ARGV);
+		if (!defined($var) || !defined($val)) {
+			die "setoutput requires arguments VARID VALUE";
+		}
+
+		my $res = $ua->get("http://$host/api/setttloutput.cgi?output=$var&state=$val");
+		if ($res->is_success) {
+			my $xml = new XML::Simple;
+			my $data = $xml->XMLin($res->decoded_content);
+		}
+
+	}		
+	case 'plcgetcode' {
+		my $file = shift(@ARGV);
+		my $getalldata = getdata_plc($host);
+		$fwversion = $getalldata->{'firmware'};
+		my $res = $ua->get("http://$host/api/plcdata.xml");
+		if ($res->is_success) {
+			my $PLC = new CAIWebcontrol::PLC($fwversion);
+			my $xml = new XML::Simple;
+			my $data = $xml->XMLin($res->decoded_content);
+			my $code = $PLC->disassemble($data->{'data'});
+			if (!$file) {
+				print $code;
+			} else {
+				write_file($file, $code);
+			}
+		}
+	}		
+	case 'plcgetrawcode' {
+		my $file = shift(@ARGV);
+		my $getalldata = getdata_plc($host);
+		$fwversion = $getalldata->{'firmware'};
+		my $res = $ua->get("http://$host/api/plcdata.xml");
+		if ($res->is_success) {
+			my $PLC = new CAIWebcontrol::PLC($fwversion);
+			my $xml = new XML::Simple;
+			my $data = $xml->XMLin($res->decoded_content);
+			if (!$file) {
+				print $data->{'data'};
+			} else {
+				write_file($file, $data->{'data'});
+			}
+		}
+		
+	}
+	case 'plccheckcode' {
+		my $file = shift(@ARGV);
+		if (!$file) {
+			die "No PLC code file specified";
+		}
+		my $content = read_parse_file($file);
+		if (test_PLCcode($content)) {
+			print "Code checks OK\n";
+		} else {
+			#Likely will never make it here unless I change error handling in module
+			print "Code not valid\n";
+			exit(-1);
+		}
+		
+
+	}
+	case 'plcsetcode' {
+		my $file = shift(@ARGV);
+		if (!$file) {
+			die "No PLC code file specified";
+		}
+		my $getalldata = getdata_plc($host);
+		$fwversion = $getalldata->{'firmware'};
+		my $content = read_parse_file($file);
+		if (test_PLCcode($content)) {
+			my $PLC = new CAIWebcontrol::PLC($fwversion);
+			my $code = $PLC->assemble($content);
+			print STDERR "POST http://$host/api/plcdata.cgi\n" if ($verbose);
+			my $starttime = time();
+			my $res = $ua->post("http://$host/api/plcdata.cgi", Content => "data=$code" );
+			if ($res->is_success) {
+				print $res->decoded_content;
+			} else {
+				print STDERR $res->status_line . "\n";
+			}
+			my $stoptime = time();
+			print "plcsetcode took " . ($stoptime - $starttime) . " seconds\n" if ($verbose);
+			# TODO Retrieve code from host and check to see if it is the same as we uploaded
+		} else {
+			print "Code did not check out locally so no upload\n";
+		}
+	}
+	else {
+#	case ['', 'help'] {
+		show_help();
+	}
+
+
+}
+
+sub read_parse_file {
+	my ($file) = @_;
+	my $content;
+	my %vars;
+
+	open(F, "<$file") || die $!;
+	while (<F>) {
+		chomp;
+		s/#.*$//;	# trim comments, comments can be whole lines or just end of lines
+		s/^\s+//;	# trim leading whitespace
+		s/\s+$//;	# trim trailing whitespace
+		next unless length;
+		if (/^\$(\w+)\s*=\s*([\-\w]*)$/) {
+			print STDERR "Var $1 = $2\n" if ($verbose);
+			$vars{$1} = $2;	
+			next;
+		}
+		# TODO Do I care if we check for valid variable substitutions?
+		s/\$(\w+)/$vars{$1}/g;	# Swap out any variables we have
+
+		$content .= $_ . "\n";
+	}
+	close(F);
+	return $content;
+}
+
+sub test_PLCcode {
+	my ($code) = @_;
+
+	my $PLC = new CAIWebcontrol::PLC($fwversion);
+	my $a = $PLC->assemble($code);
+
+	my $PLC2 = new CAIWebcontrol::PLC($fwversion);
+	my $c = $PLC2->disassemble($a);
+
+	my $PLC3 = new CAIWebcontrol::PLC($fwversion);
+	my $a2 = $PLC3->assemble($c);
+
+	return ($a eq $a2);
+}	
+
+#get temp probe data from $data for RRD.  returns NaN if probe is something other than "ok" (ie: fail or unbound)
+sub gettemp {
+	my ($id, $data) = @_;
+
+	if ($data->{"tstat$id"} eq 'ok') {
+		if ($data->{"ts$id"} =~ /([\d\.]+)\s[CF]{1}/) {
+			# TODO allow user to convert to C/F?
+			return $1;
+		}
+	}
+	return 'NaN';
+}	
+
+#strip temp will return only the numeric part of a temp
+sub st {
+	my ($str) = @_;
+
+	if ($str =~ /([\d\.]+)\s[CF]{1}/) {
+		return $1;
+	}
+
+	return 'NaN';
+}
+
+sub getdata_plc {
+	my ($host) = @_;
+
+	my $res = $ua->get("http://$host/getall.cgi");
+	if ($res->is_success) {
+		my $xml = new XML::Simple;
+		my $data = $xml->XMLin($res->decoded_content);
+		return ($data);
+	}
+	return '';
+}
+
+
+sub show_help {
+		print <<EOF;
+HELP TEXT
+Commands available:
+showmacaddress			Shows the mac address of the host
+showtempcodes			Show a list of all temp codes
+showboundtempcodes		Show a list of all temp codes bound 
+showxmldata			Shows complete XML data returned from host
+getdata				Get all data and update RRDs and graphs
+setvar VARID VALUE		Set variable VARID to VALUE 
+plcgetcode (<filename>)		Retrieve's PLC code from host and prints to file or STDOUT
+plccheckcode <filename>		Parse PLC code from file and check for syntax
+plcsetcode <filename>		Parse PLC code from file and upload to host
+EOF
+
+}

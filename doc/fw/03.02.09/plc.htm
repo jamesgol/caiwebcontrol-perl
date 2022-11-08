@@ -1,0 +1,297 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>CAI WebControl PLC</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="api/NetDevAPI.js"></script>
+<script type="text/javascript" src="api/ajax.js"></script>
+<script type="text/javascript" src="api/assembler.js"></script>
+<script type="text/javascript" src="api/encoding.js"></script>
+<script type="text/javascript" src="api/helpers.js"></script>
+<script type="text/javascript" src="help/help.js"></script>
+<script type="text/javascript" src="help/version.js"></script>
+
+<style type="text/css">
+<!--
+.style1 {color: #FFFFFF}
+-->
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div id="title">
+		  <div class="right">CAI WebControl PLC </div>
+    <p><span id="hello">&nbsp;</span></p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+	  
+	
+	<div id="attributes">
+	  <table width="100%" border="0" bordercolor="#FFFFFF" bgcolor="#0066FF">
+			<tr>
+			  <td width="271" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="version">Version: v03.02.09</span></div></td>
+   			  <td width="359" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">IpAddress: 10.10.42.141</span></div></td>
+			  <td width="417" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">Name: WEBCONTROL     </span></div></td> 
+			  <td width="191" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="date">11/22/2011</span></div></td>
+			  <td width="176" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="time">20:13:13</span></div></td>
+			</tr>
+	  </table>
+		</div>
+	</div>
+
+	<div id="page">
+	  <div class="center">PLC Program</div>
+	</div>
+
+	<div id="menu">
+	<a href="/index.htm">System Status</a>
+	<a href="/opctrl.htm">Output Control</a>
+	<a href="/x10ctrl.htm">x10 Control</a>
+	<a href="/iosetup.htm">I/O Setup</a>
+	<a href="/email.htm">Email Setup</a>
+	<a href="/tmpsnsrcfg.htm">Temperature Sensor Setup</a>
+	<a href="/plc.htm">PLC Program</a>
+	<a href="/boardsetup.htm">General Setup</a>
+	<a href="/netcfg.htm">Network Setup</a>
+	<a href="javascript:showHelp('http://www.cainetworks.com/products/webcontrol/index.html')">Help</a>
+	<br />
+	<br />
+	<a href="javascript:openStatusWindow()">View System Status</a>
+	</div>
+
+
+
+<!-- content -->
+	 <div align="center" style="margin-right:170px;">
+			<textarea name="textfield" cols="60" rows="40" class="box1" id="asmCode" wrap="off" onkeydown="return catchTab(this,event)"></textarea>
+	</div>
+	<div align="center">
+			<br />
+			<br />
+			<input id="sendBtn" type="button" name="Button" value="Send"  onclick="assembleHandler()" style="width:200px; height:100px"/>
+	  </div>
+
+	<div class="push"></div>
+</div>
+
+
+<script type="text/javascript">
+/*********************************************************
+
+METHODS TO HANDLE TAB CHARACTER USAGE IN TEXT BOX 
+
+*/
+function setSelectionRange(input, selectionStart, selectionEnd) {
+  if (input.setSelectionRange) {
+    input.focus();
+    input.setSelectionRange(selectionStart, selectionEnd);
+  }
+  else if (input.createTextRange) {
+    var range = input.createTextRange();
+    range.collapse(true);
+    range.moveEnd('character', selectionEnd);
+    range.moveStart('character', selectionStart);
+    range.select();
+  }
+}
+
+function replaceSelection (input, replaceString) {
+	if (input.setSelectionRange) {
+		var selectionStart = input.selectionStart;
+		var selectionEnd = input.selectionEnd;
+		input.value = input.value.substring(0, selectionStart)+ replaceString + input.value.substring(selectionEnd);
+    
+		if (selectionStart != selectionEnd){ 
+			setSelectionRange(input, selectionStart, selectionStart + 	replaceString.length);
+		}else{
+			setSelectionRange(input, selectionStart + replaceString.length, selectionStart + replaceString.length);
+		}
+
+	}else if (document.selection) {
+		var range = document.selection.createRange();
+
+		if (range.parentElement() == input) {
+			var isCollapsed = range.text == '';
+			range.text = replaceString;
+
+			 if (!isCollapsed)  {
+				range.moveStart('character', -replaceString.length);
+				range.select();
+			}
+		}
+	}
+}
+
+
+// We are going to catch the TAB key so that we can use it, Hooray!
+function catchTab(item,e){
+	if(navigator.userAgent.match("Gecko")){
+		c=e.which;
+	}else{
+		c=e.keyCode;
+	}
+	if(c==9){
+		replaceSelection(item,String.fromCharCode(9));
+		setTimeout("document.getElementById('"+item.id+"').focus();",0);	
+		return false;
+	}
+		    
+}
+
+/**************************************************/
+
+</script>
+
+<script type="text/javascript">
+  
+var dotCount;
+function dotUpdate()
+{
+	if(!loadComplete)
+	{
+		document.getElementById('asmCode').value += ".";
+		dotCount ++;
+		if(dotCount == 50)
+		{
+			dotCount = 0;
+			document.getElementById('asmCode').value += "\r\n";
+		}
+		
+		setTimeout("dotUpdate()", 500);
+	}
+}
+
+
+var code = "";
+function assembleHandler()
+{
+	try
+	{				
+		var id = document.getElementById('asmCode');
+		if(id && sending == false)
+		{
+			code = id.value;
+			loadComplete = false;
+			id.value = "Sending PLC Instructions...";
+			NetDevAPI.setPLCInstructions(code, setInstructionsDone);
+			sending = true;
+			document.getElementById('sendBtn').disabled=true;
+			document.getElementById('sendBtn').value="Sending...";
+			setTimeout("dotUpdate()", 500);
+		}
+	}
+	catch(error)
+	{
+		alert(error);
+		document.getElementById('asmCode').value = code;
+	}
+}
+
+
+var sending = false;
+function setInstructionsDone(result)
+{	
+	loadComplete = true;
+	sending = false;
+	document.getElementById('sendBtn').disabled=false;
+	document.getElementById('sendBtn').value="Send";
+	if(result == 'error')
+	{
+		alert("Error occured whilst sending configuration to WebControl");
+	}
+	else
+	{
+		alert("PLC Config sent");
+	}
+	
+	document.getElementById('asmCode').value = code;
+
+}
+
+var loadComplete = false;
+function loadInstructions (codeStr)
+{
+	loadComplete = true;
+	document.getElementById('sendBtn').disabled=false;
+	if(codeStr != null)
+	{
+		document.getElementById('asmCode').value = codeStr;
+	}
+	else
+	{
+		document.getElementById('asmCode').value = "Failed to load plc instructions!";
+	}
+}
+
+function openStatusWindow()
+{  
+	if (window.showModelessDialog) 
+	{
+		window.showModelessDialog("./statuswin.htm", "System Status", "dialogWidth:1100px;dialogHeight:500px;");
+	}
+	else 
+	{
+		window.open('./statuswin.htm','System Status', 'height=500px,width=1100px, toolbar=no,directories=no,status=no, menubar=no,scrollbars=yes,resizable=tes ,modal=no');
+	}
+} 
+
+
+function statusUpdate(statusXML)
+{
+	if(statusXML != null)
+	{
+		var id = document.getElementById('date');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'date');
+		}
+		
+		var id = document.getElementById('time');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'time');
+		}
+	}
+	
+	setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+}
+
+var PollingEnabled = false;
+function genCfgCallback(cfg)
+{
+	if(cfg != null)
+	{
+		PollingEnabled = cfg.getAjaxPolling();
+		if(PollingEnabled)
+		{
+			setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+		}
+	}
+}
+
+window.onload = function()
+{
+		loadComplete = false;
+		document.getElementById('sendBtn').disabled=true;
+		document.getElementById('asmCode').value = "Loading PLC Instructions...";
+		NetDevAPI.getPLCInstructions(loadInstructions);
+	
+		NetDevAPI.getGeneralConfig(genCfgCallback);
+				
+		setTimeout("dotUpdate()", 500);
+
+}
+</script>
+
+<div class="spacer">&nbsp;</div>
+<div id="footer" align="center">Copyright &copy; 2011 CAI Networks, Inc.</div>
+</body>
+<HEAD>
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+</HEAD>
+</html>

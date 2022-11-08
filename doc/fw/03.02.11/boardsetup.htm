@@ -1,0 +1,285 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>CAI WebControl PLC</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="api/NetDevAPI.js"></script>
+<script type="text/javascript" src="api/ajax.js"></script>
+<script type="text/javascript" src="api/assembler.js"></script>
+<script type="text/javascript" src="api/encoding.js"></script>
+<script type="text/javascript" src="api/helpers.js"></script>
+<script type="text/javascript" src="help/help.js"></script>
+<script type="text/javascript" src="help/version.js"></script>
+
+<style type="text/css">
+<!--
+.style1 {color: #FFFFFF}
+.style5 {font-size: 12px}
+-->
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div id="title">
+		  <div class="right">CAI WebControl PLC </div>
+    <p><span id="hello">&nbsp;</span></p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+	  
+	
+	<div id="attributes">
+	  <table width="100%" border="0" bordercolor="#FFFFFF" bgcolor="#0066FF">
+			<tr>
+			  <td width="271" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="version">Version: v03.02.11</span></div></td>
+   			  <td width="359" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">IpAddress: 192.168.1.15</span></div></td>
+			  <td width="417" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">Name: WEBCONTROL     </span></div></td> 
+			  <td width="191" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="date">10/14/2011</span></div></td>
+			  <td width="176" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="time">12:05:22</span></div></td>
+			</tr>
+	  </table>
+	</div>
+  </div>
+
+	<div id="page">
+	  <div class="center">General Setup</div>
+	</div>
+
+	<div id="menu">
+	<a href="/index.htm">System Status</a>
+	<a href="/opctrl.htm">Output Control</a>
+	<a href="/x10ctrl.htm">x10 Control</a>
+	<a href="/iosetup.htm">I/O Setup</a>
+	<a href="/email.htm">Email Setup</a>
+	<a href="/tmpsnsrcfg.htm">Temperature Sensor Setup</a>
+	<a href="/plc.htm">PLC Program</a>
+	<a href="/boardsetup.htm">General Setup</a>
+	<a href="/netcfg.htm">Network Setup</a>
+	<a href="javascript:showHelp('http://www.cainetworks.com/products/webcontrol/index.html')">Help</a>
+	</div>
+
+
+
+
+
+	<!-- content -->
+	
+	<p align="center">&nbsp;</p>
+	
+	<div align="center" style="margin-right:170px; font-size:24px;"><strong>Clock Setup </strong></div>
+	<p align="center">&nbsp;</p>
+	
+	<div align="center" style="margin-right:170px;"><span class="style39">Time Zone</span>
+		  <select name="select" id="timeZone">
+			<option>utc-12</option>
+			<option>utc-11</option>
+			<option>utc-10</option>
+			<option>utc-9</option>
+			<option>utc-8</option>
+			<option>utc-7</option>
+			<option>utc-6</option>
+			<option>utc-5</option>
+			<option>utc-4</option>
+			<option>utc-3</option>
+			<option>utc-2</option>
+			<option>utc-1</option>
+			<option selected="selected">utc</option>
+			<option>utc+1</option>
+			<option>utc+2</option>
+			<option>utc+3</option>
+			<option>utc+4</option>
+			<option>utc+5</option>
+			<option>utc+6</option>
+			<option>utc+7</option>
+			<option>utc+8</option>
+			<option>utc+9</option>
+			<option>utc+9.5</option>
+			<option>utc+10</option>
+			<option>utc+11</option>
+			<option>utc+12</option>
+		</select>
+	</div>
+	  	<p align="center">&nbsp;</p>
+  	<label>
+		<div align="center" style="margin-right:170px;"><span class="style40">Set Date Time</span>
+    	<input name="text" type="text" id="setTime" maxlength="19" />
+  		</div>
+	</label>
+ 	<div align="center" style="margin-right:170px;"><span class="style5">Note: time format MM/DD/YYYY HH:MM:SS</span></div>
+  	<p align="center">&nbsp;</p>
+  
+  	<div align="center" style="margin-right:170px; font-size:24px;"><strong>Options</strong></div>
+
+ 	<p align="center" class="style50">&nbsp;</p>	
+  	<div align="center" style="margin-right:170px;">
+    	<label>UROM1 <input type="text" name="urom1"  id="urom1"/>User defined 32 bit int</label></div>
+  	<p align="center" class="style50">&nbsp;</p>
+  	<div align="center" style="margin-right:170px;">
+    	<label>UROM2 <input type="text" name="urom2"  id="urom2"/>User defined 32 bit int</label></div>
+  	<p align="center" class="style50">&nbsp;</p>
+  	<div align="center" style="margin-right:170px;">
+    	<label>UROM3 <input type="text" name="urom3"  id="urom3"/>User defined 32 bit int</label></div>
+  	<p align="center" class="style50">&nbsp;</p>
+  	<div align="center" style="margin-right:170px;">
+    	<label>UROM4 <input type="text" name="urom4"  id="urom4"/>User defined 32 bit int</label></div>
+  	<p align="center" class="style50">&nbsp;</p>	
+  	<div align="center" style="margin-right:170px;">
+    <label><input type="checkbox" name="checkbox" value="checkbox" id="pollEnabled"/>Web Polling Enabled</label></div>
+  	<p align="center" class="style50">&nbsp;</p>
+  	<p align="center" class="style50">&nbsp;</p>
+  	<div align="center" style="margin-right:170px;">
+	<input id="sendBtn" type="button" name="Button" value="Send"  onclick="OnSend()" style="width:200px; height:100px"/>
+	</div>
+	
+  	<p align="center" class="style50">&nbsp;</p>
+  	<p align="center" class="style50">&nbsp;</p>
+  
+  
+  
+	<div class="push"></div>
+</div>
+
+
+
+<script type="text/javascript">
+function OnSend()
+{	
+	try
+	{
+		var genConfig = new GeneralCfg();
+		
+		/* time zone */
+		var ts = "";
+		var i = 0;
+		while(document.getElementById('timeZone')[i])
+		{
+			if(document.getElementById('timeZone')[i].selected == '1')
+			{
+				ts = document.getElementById('timeZone')[i].innerHTML;
+				break;
+			}
+			
+			i++;
+		}
+		
+		genConfig.setTimeZone(ts);
+
+		genConfig.setUROM1(document.getElementById('urom1').value);
+		genConfig.setUROM2(document.getElementById('urom2').value);
+		genConfig.setUROM3(document.getElementById('urom3').value);
+		genConfig.setUROM4(document.getElementById('urom4').value);
+		
+		
+		/* polling */
+		genConfig.setAjaxPolling(document.getElementById('pollEnabled').checked);
+		
+		NetDevAPI.setGeneralConfig(genConfig, resultCallback);
+		
+		if(document.getElementById('setTime').value != "")
+		{
+			NetDevAPI.setClockTime(document.getElementById('setTime').value, null);
+		}
+	
+		document.getElementById('sendBtn').disabled=true;
+		document.getElementById('sendBtn').value="Sending...";
+	}
+	catch(error)
+	{
+		alert(error);
+	}
+}
+
+function resultCallback(result)
+{
+	document.getElementById('sendBtn').disabled=false;
+	document.getElementById('sendBtn').value="Send";
+	if(result == 'error')
+	{
+		alert("Error occured whilst sending configuration to NetDev");
+	}
+	else
+	{
+		NetDevAPI.getGeneralConfig(getCfgCallback);
+		alert("Config sent");
+	}
+}
+
+var PollingEnabled = false;
+function getCfgCallback(cfg)
+{
+	if(cfg != null)
+	{
+		var genConfig = cfg;
+	
+		document.getElementById('pollEnabled').checked = genConfig.getAjaxPolling();
+		document.getElementById('urom1').value = genConfig.getUROM1();
+		document.getElementById('urom2').value = genConfig.getUROM2();
+		document.getElementById('urom3').value = genConfig.getUROM3();
+		document.getElementById('urom4').value = genConfig.getUROM4();
+
+				
+		var ts = genConfig.getTimeZone();
+		var i = 0;
+		while(document.getElementById('timeZone')[i])
+		{
+			if(document.getElementById('timeZone')[i].innerHTML == ts)
+			{
+				document.getElementById('timeZone')[i].selected = '1';
+				break;
+			}
+			
+			i++;
+		}
+		
+		PollingEnabled = cfg.getAjaxPolling();
+		if(PollingEnabled)
+		{
+			setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+		}
+	}
+}
+
+window.onload = function() {
+
+	NetDevAPI.getGeneralConfig(getCfgCallback);
+
+}
+
+
+/* handles polling of date/time if enabled */
+function statusUpdate(statusXML)
+{
+	if(statusXML != null)
+	{
+		var id = document.getElementById('date');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'date');
+		}
+		
+		var id = document.getElementById('time');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'time');
+		}
+	}
+	
+	if(PollingEnabled)
+	{
+		setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+	}
+}
+
+</script>
+
+<div class="spacer">&nbsp;</div>
+<div id="footer" align="center">Copyright &copy; 2008-2012 CAI Networks, Inc.</div>
+</body>
+<HEAD>
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+</HEAD>
+</html>

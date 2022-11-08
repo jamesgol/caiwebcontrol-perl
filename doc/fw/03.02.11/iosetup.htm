@@ -1,0 +1,356 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<title>CAI WebControl PLC</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="api/NetDevAPI.js"></script>
+<script type="text/javascript" src="api/ajax.js"></script>
+<script type="text/javascript" src="api/assembler.js"></script>
+<script type="text/javascript" src="api/encoding.js"></script>
+<script type="text/javascript" src="api/helpers.js"></script>
+<script type="text/javascript" src="help/help.js"></script>
+<script type="text/javascript" src="help/version.js"></script>
+
+<style type="text/css">
+<!--
+.style1 {color: #FFFFFF}
+-->
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div id="title">
+		  <div class="right">CAI WebControl PLC </div>
+    <p><span id="hello">&nbsp;</span></p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+	  
+	
+	<div id="attributes">
+	  <table width="100%" border="0" bordercolor="#FFFFFF" bgcolor="#0066FF">
+			<tr>
+			  <td width="271" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="version">Version: v03.02.11</span></div></td>
+   			  <td width="359" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">IpAddress: 192.168.1.15</span></div></td>
+			  <td width="417" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">Name: WEBCONTROL     </span></div></td> 
+			  <td width="191" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="date">10/14/2011</span></div></td>
+			  <td width="176" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="time">12:05:14</span></div></td>
+			</tr>
+	  </table>
+		</div>
+	</div>
+
+	<div id="page">
+	  <div class="center">I/O Setup</div>
+	</div>
+
+	<div id="menu">
+	<a href="/index.htm">System Status</a>
+	<a href="/opctrl.htm">Output Control</a>
+	<a href="/x10ctrl.htm">x10 Control</a>
+	<a href="/iosetup.htm">I/O Setup</a>
+	<a href="/email.htm">Email Setup</a>
+	<a href="/tmpsnsrcfg.htm">Temperature Sensor Setup</a>
+	<a href="/plc.htm">PLC Program</a>
+	<a href="/boardsetup.htm">General Setup</a>
+	<a href="/netcfg.htm">Network Setup</a>
+	<a href="javascript:showHelp('http://www.cainetworks.com/products/webcontrol/index.html')">Help</a>
+	</div>
+
+
+
+
+
+	<!-- content -->
+  <div align="left" style="margin-left:250px">
+	 <label>
+  		<input type="checkbox" name="globalPlc" value="checkbox" id="globalPlc"/>
+  	</label>
+  	Global PLC Enable 
+	<input type="checkbox" name="x10Enable" value="checkbox" id="x10Enable"/>
+     X10 Enable </div>
+	<p>&nbsp;</p>
+	
+	<div style="margin-left: 250px; margin-right: 10px;">
+		<table width="535" border="1">
+  		<tr>
+    		<th colspan="9" scope="col">TTL Inputs </th>
+  		</tr>
+  		<tr>
+			<td width="207" nowrap="nowrap">&nbsp;</td>
+			<td width="33"><strong>1</strong></td>
+			<td width="33"><strong>2</strong></td>
+			<td width="35"><strong>3</strong></td>
+			<td width="32"><strong>4</strong></td>
+			<td width="38"><strong>5</strong></td>
+			<td width="30"><strong>6</strong></td>
+			<td width="33"><strong>7</strong></td>
+			<td width="36"><strong>8</strong></td>
+		 </tr>
+		 <tr>
+			<td nowrap="nowrap"><strong>State Inverted</strong></td>
+			<td><label>
+				<input type="checkbox" name="InvertInput1" value="checkbox" id="ii_1"/>
+			</label></td>
+			<td><label>
+			  <input type="checkbox" name="InvertInput2" value="checkbox" id="ii_2"/>
+			</label></td>
+			<td><label>
+			  <input type="checkbox" name="InvertInput3" value="checkbox" id="ii_3"/>
+			</label></td>
+			<td><label>
+			  <input type="checkbox" name="InvertInput4" value="checkbox" id="ii_4"/>
+			</label></td>
+			<td><label>
+			  <input type="checkbox" name="InvertInput5" value="checkbox" id="ii_5"/>
+			</label></td>
+			<td><label>
+			  <input type="checkbox" name="InvertInput6" value="checkbox" id="ii_6"/>
+			</label></td>
+			<td><label>
+			  <input type="checkbox" name="InvertInput7" value="checkbox" id="ii_7"/>
+			</label></td>
+			<td><label>
+			  <input type="checkbox" name="InvertInput8" value="checkbox" id="ii_8"/>
+			</label></td>
+		</tr>
+		</table>
+	</div>
+
+	<p>&nbsp;</p>
+	<div style="margin-left: 250px; margin-right: 10px;">
+		<table width="865" border="1">
+		  <tr>
+			<th colspan="9" scope="col">TTL Outputs </th>
+		  </tr>
+		  <tr>
+			<td nowrap="nowrap">&nbsp;</td>
+			<td><strong>1</strong></td>
+			<td><strong>2</strong></td>
+			<td><strong>3</strong></td>
+			<td><strong>4</strong></td>
+			<td><strong>5</strong></td>
+			<td><strong>6</strong></td>
+			<td><strong>7</strong></td>
+			<td><strong>8</strong></td>
+		  </tr>
+  		<tr>
+		<td width="221" nowrap="nowrap"><strong>Browser Control Enabled </strong></td>
+		<td width="72"><label>
+		  <input type="checkbox" name="browserEnabled1" value="checkbox" id="be_1"/>
+		</label></td>
+		<td width="70"><label>
+		  <input type="checkbox" name="browserEnabled2" value="checkbox" id="be_2"/>
+		</label></td>
+		<td width="83"><label>
+		  <input type="checkbox" name="browserEnabled3" value="checkbox" id="be_3"/>
+		</label></td>
+		<td width="74"><label>
+		  <input type="checkbox" name="browserEnabled4" value="checkbox" id="be_4"/>
+		</label></td>
+		<td width="66"><label>
+		  <input type="checkbox" name="browserEnabled5" value="checkbox" id="be_5"/>
+		</label></td>
+		<td width="70"><label>
+		  <input type="checkbox" name="browserEnabled6" value="checkbox" id="be_6"/>
+		</label></td>
+		<td width="70"><label>
+		  <input type="checkbox" name="browserEnabled7" value="checkbox" id="be_7"/>
+		</label></td>
+		<td width="81"><label>
+		  <input type="checkbox" name="browserEnabled8" value="checkbox" id="be_8"/>
+		</label></td>
+	  </tr>
+	  <tr>
+		<td nowrap="nowrap"><strong>Plc Control Enabled </strong></td>
+		<td><label>
+		  <input type="checkbox" name="plcEnabled1" value="checkbox" id="pce_1"/>
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="plcEnabled2" value="checkbox" id="pce_2"/>
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="plcEnabled3" value="checkbox" id="pce_3" />
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="plcEnabled4" value="checkbox" id="pce_4"/>
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="plcEnabled5" value="checkbox" id="pce_5"/>
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="plcEnabled6" value="checkbox" id="pce_6"/>
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="plcEnabled7" value="checkbox" id="pce_7"/>
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="plcEnabled8" value="checkbox" id="pce_8"/>
+		</label></td>
+	  </tr>
+	  <tr>
+		<td nowrap="nowrap"><strong>State Inverted </strong></td>
+		<td><label>
+		  <input name="outputInverted1" type="checkbox" value="checkbox"  id="oi_1"/>
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="outputInverted2" value="checkbox" id="oi_2"/>
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="outputInverted3" value="checkbox" id="oi_3"/>
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="outputInverted4" value="checkbox" id="oi_4"/>
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="outputInverted5" value="checkbox" id="oi_5"/>
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="outputInverted6" value="checkbox" id="oi_6" />
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="outputInverted7" value="checkbox" id="oi_7"/>
+		</label></td>
+		<td><label>
+		  <input type="checkbox" name="outputInverted8" value="checkbox" id="oi_8"/>
+		</label></td>
+	  </tr>
+	</table>
+  	<p>&nbsp;</p>
+	</div>
+	
+	<div align="center" style="margin-right:170px;">
+  	<label>
+		<input id="sendBtn" type="button" name="Button" value="Send"  onclick="OnSend()" style="width:200px; height:100px"/>
+	</label>
+	</div>
+
+	<div class="push"></div>
+</div>
+
+
+
+<script type="text/javascript">
+function OnSend()
+{	
+	try
+	{
+		var ioConfig = new IoCtrlCfg();
+		
+		ioConfig.setPlcEnabled(document.getElementById('globalPlc').checked);
+		ioConfig.setX10Enabled(document.getElementById('x10Enable').checked);
+				
+		for(var i = 0; i<8; i++)
+		{
+			var x = i + 1;
+			
+			ioConfig.enabledBrowserCtrl(x, document.getElementById('be_' + x).checked);
+			ioConfig.enabledPlcCtrl(x, document.getElementById('pce_' + x).checked);
+			ioConfig.invertOutput(x, document.getElementById('oi_' + x).checked);
+			ioConfig.invertInput(x, document.getElementById('ii_' + x).checked);
+		}
+		
+		
+		NetDevAPI.setIoCtrlConfig(ioConfig, resultCallback);
+		
+		document.getElementById('sendBtn').disabled=true;
+		document.getElementById('sendBtn').value="Sending...";
+		
+	}
+	catch(error)
+	{
+		alert(error);
+	}
+}
+
+function resultCallback(result)
+{
+	document.getElementById('sendBtn').disabled=false;
+	document.getElementById('sendBtn').value="Send";
+	if(result == 'error')
+	{
+		alert("Error occured whilst sending configuration to NetDev");
+	}
+	else
+	{
+		NetDevAPI.getIoCtrlConfig(getCfgCallback);
+		alert("Config sent");
+	}
+}
+
+function getCfgCallback(cfg)
+{
+	document.getElementById('sendBtn').disabled=false;
+	if(cfg != null)
+	{
+		var ioConfig = cfg;
+	
+		document.getElementById('globalPlc').checked = ioConfig.getPlcEnabled();
+		document.getElementById('x10Enable').checked = ioConfig.getX10Enabled();
+		
+		for(var i = 0; i<8; i++)
+		{
+			var x = i + 1;
+						
+			document.getElementById('be_' + x).checked = ioConfig.getBrowserCtrl(x);
+			document.getElementById('pce_' + x).checked = ioConfig.getPlcCtrl(x);
+			document.getElementById('oi_' + x).checked = ioConfig.getOutputInvert(x);
+			document.getElementById('ii_' + x).checked = ioConfig.getInputInvert(x);
+		}
+	}
+}
+
+window.onload = function() {
+
+	document.getElementById('sendBtn').disabled=true;
+			
+	NetDevAPI.getIoCtrlConfig(getCfgCallback);
+	NetDevAPI.getGeneralConfig(genCfgCallback);
+
+}
+
+function statusUpdate(statusXML)
+{
+	if(statusXML != null)
+	{
+		var id = document.getElementById('date');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'date');
+		}
+		
+		var id = document.getElementById('time');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'time');
+		}
+	}
+	
+	setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+	
+}
+
+function genCfgCallback(cfg)
+{
+	if(cfg != null)
+	{
+		if(cfg.getAjaxPolling())
+		{
+			setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+		}
+	}
+}
+
+</script>
+
+<div class="spacer">&nbsp;</div>
+<div id="footer" align="center">Copyright &copy; 2008-2012 CAI Networks, Inc.</div>
+</body>
+<HEAD>
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+</HEAD>
+</html>

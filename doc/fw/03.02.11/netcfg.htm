@@ -1,0 +1,351 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<title>CAI WebControl PLC</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+<script type="text/javascript" src="api/NetDevAPI.js"></script>
+<script type="text/javascript" src="api/ajax.js"></script>
+<script type="text/javascript" src="api/assembler.js"></script>
+<script type="text/javascript" src="api/encoding.js"></script>
+<script type="text/javascript" src="api/helpers.js"></script>
+<script type="text/javascript" src="help/help.js"></script>
+<script type="text/javascript" src="help/version.js"></script>
+
+<style type="text/css">
+<!--
+.style3 {color: #FFFFFF}
+.style4 {font-weight: bold}
+-->
+</style>
+</head>
+
+<body>
+<div class="wrapper">
+
+  <div id="title">
+		  <div class="right">CAI WebControl PLC </div>
+    <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+		  <p>&nbsp;</p>
+	  
+	
+	<div id="attributes">
+	  <table width="100%" border="0" bordercolor="#FFFFFF" bgcolor="#0066FF">
+			<tr>
+			  <td width="271" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="version">Version: v03.02.11</span></div></td>
+   			  <td width="359" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">IpAddress: 192.168.1.15</span></div></td>
+			  <td width="417" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="builddate">Name: WEBCONTROL     </span></div></td> 
+			  <td width="191" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="date">10/14/2011</span></div></td>
+			  <td width="176" bgcolor="#0066FF"><div align="left" class="style1 style3"><span class="style46" id="time">12:05:24</span></div></td>
+			</tr>
+	  </table>
+	</div>
+  </div>
+
+	<div id="page">
+	  <div class="center">
+	    <p>Network Setup</p>
+      </div>
+	</div>
+
+	<div id="menu">
+	<a href="/index.htm">System Status</a>
+	<a href="/opctrl.htm">Output Control</a>
+	<a href="/x10ctrl.htm">x10 Control</a>
+	<a href="/iosetup.htm">I/O Setup</a>
+	<a href="/email.htm">Email Setup</a>
+	<a href="/tmpsnsrcfg.htm">Temperature Sensor Setup</a>
+	<a href="/plc.htm">PLC Program</a>
+	<a href="/boardsetup.htm">General Setup</a>
+	<a href="/netcfg.htm">Network Setup</a>
+	<a href="javascript:showHelp('http://www.cainetworks.com/products/webcontrol/index.html')">Help</a>
+	</div>
+
+
+
+
+
+	<!-- content -->
+	<div align="center" style="margin-right:170px">
+	<p align="center"><strong>MAC Address</strong>: 00:22:12:02:01:A4 </p>
+	</div>
+	 
+	<div align="center" style="margin-right:170px">
+	<table width="473" border="1">
+	  <tr>
+		<td colspan="2"><div align="center" class="style4"><strong>Network Configuration </strong></div></td>
+	  </tr>
+	  <tr>
+		<td width="290"><div align="left">NetBIOS Name </div></td>
+		<td width="167"><label>
+		  <div align="left">
+		    <input name="HostName" type="text" id="NetBIOSName" maxlength="16" />
+          </div>
+		</label></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">Static IP Address </div></td>
+		<td><label>
+		  <div align="left">
+		    <input name="IpAddr" type="text" id="IpAddr" maxlength="15" />
+          </div>
+		</label></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">Subnet Mask </div></td>
+		<td><label>
+		  <div align="left">
+		    <input name="text" type="text" id="SubNet" maxlength="15" />
+          </div>
+		</label></td>
+	  </tr>
+	  <tr>
+        <td><div align="left">Gateway</div></td>
+	    <td><label>
+          <div align="left">
+            <input name="text" type="text" id="Gateway" maxlength="15" />
+          </div>
+	    </label></td>
+      </tr>
+	  
+	  <tr>
+		<td><div align="left">Primary DNS Server </div></td>
+		<td><div align="left">
+		  <input name="text" type="text" id="PrimaryDNS" maxlength="15"/>
+	    </div></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">Secondary DNS Server </div></td>
+		<td><div align="left">
+		  <input name="text" type="text" id="SecondaryDNS" maxlength="15" />
+	    </div></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">Username</div></td>
+		<td><label>
+		  <div align="left">
+		    <input name="text" type="text" id="UserName" maxlength="16"/>
+          </div>
+		</label></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">Password</div></td>
+		<td><label>
+		  <div align="left">
+		    <input name="text" type="text" id="Password"/>
+          </div>
+		</label></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">DHCP Enabled </div></td>
+		<td><label>
+		  <div align="left">
+		    <input name="checkbox" type="checkbox" id="DCHPEnabledCheck" value="1"/>
+          </div>
+		</label></td>
+	  </tr>
+	  
+	  <tr>
+		<td><div align="left">Web Login Enabled </div></td>
+		<td><label>
+		  <div align="left">
+		    <input name="checkbox" type="checkbox" value="1" id="WebLoginEnabled" />
+          </div>
+		</label></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">HTTP Port </div></td>
+		<td><div align="left">
+		  <input name="text2" type="text" id="httpPort" maxlength="6"/>
+	    </div></td>
+	  </tr>
+	  <tr>
+		<td colspan="2">&nbsp;</td>
+	  </tr>
+	  <tr>
+		<td colspan="2"><div align="center"><strong>Access Limit </strong></div></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">IP Address 1 </div></td>
+		<td><div align="left">
+		  <input name="text22" type="text" id="limit1" maxlength="16"/>
+	    </div></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">IP Address 2 </div></td>
+		<td><div align="left">
+		  <input name="text23" type="text" id="limit2" maxlength="16"/>
+	    </div></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">IP Address 3 </div></td>
+		<td><div align="left">
+		  <input name="text24" type="text" id="limit3" maxlength="16"/>
+	    </div></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">IP Address 4 </div></td>
+		<td><div align="left">
+		  <input name="text25" type="text" id="limit4" maxlength="16"/>
+	    </div></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">IP Address 5 </div></td>
+		<td><div align="left">
+		  <input name="text26" type="text" id="limit5" maxlength="16"/>
+	    </div></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">IP Address 6 </div></td>
+		<td><div align="left">
+		  <input name="text27" type="text" id="limit6" maxlength="16"/>
+	    </div></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">IP Address 7 </div></td>
+		<td><div align="left">
+		  <input name="text28" type="text" id="limit7" maxlength="16"/>
+	    </div></td>
+	  </tr>
+	  <tr>
+		<td><div align="left">IP Address 8 </div></td>
+		<td><div align="left">
+		  <input name="text29" type="text" id="limit8" maxlength="16"/>
+	    </div></td>
+	  </tr>
+	</table>
+	</div>
+	
+	<div align="center">
+	<p>&nbsp;</p>
+			<input id="sendBtn" type="button" name="Button" value="Send"  onclick="OnSubmit()" style="width:200px; height:100px"/>
+	</div>
+
+	<div class="push"></div>
+</div>
+
+
+<script type="text/javascript">
+function OnSubmit()
+{	
+	try
+	{
+		var netConfig = new NetworkCfg();
+		
+		netConfig.setHostName(document.getElementById('NetBIOSName').value);
+		netConfig.setIpAddress(document.getElementById('IpAddr').value);
+	 	netConfig.setSubNetMask(document.getElementById('SubNet').value);
+	 	netConfig.setGateway(document.getElementById('Gateway').value);
+		netConfig.setPrimaryDNS(document.getElementById('PrimaryDNS').value);
+		netConfig.setSecondayDNS(document.getElementById('SecondaryDNS').value);
+		netConfig.setUserName(document.getElementById('UserName').value);
+		netConfig.setPassword(document.getElementById('Password').value);
+		netConfig.enableDHCP(document.getElementById('DCHPEnabledCheck').checked);
+		netConfig.enableWebLogin(document.getElementById('WebLoginEnabled').checked);
+		netConfig.setHttpPort(document.getElementById('httpPort').value);
+		
+		for(var i = 0; i<8; i++)
+		{
+			var id = i + 1;
+			netConfig.setAllowedIpAddress(id,document.getElementById('limit' + id).value);
+		}
+			
+		NetDevAPI.setNetworkConfig(netConfig, resultCallback);
+		
+		document.getElementById('sendBtn').disabled=true;
+		document.getElementById('sendBtn').value="Sending...";
+	}
+	catch(error)
+	{
+		alert(error);
+	}
+}
+
+function resultCallback(result)
+{
+	document.getElementById('sendBtn').disabled=false;
+	document.getElementById('sendBtn').value="Send";
+	alert("Network Configuration Sent. You may need to re-point your browser");
+}
+
+function getCfgCallback(cfg)
+{
+	document.getElementById('sendBtn').disabled=false;
+	if(cfg != null)
+	{
+		var netConfig = cfg;
+		
+		document.getElementById('NetBIOSName').value = netConfig.getHostName();
+		document.getElementById('IpAddr').value = netConfig.getIpAddress();
+		document.getElementById('SubNet').value = netConfig.getSubNetMask();
+		document.getElementById('Gateway').value = netConfig.getGateway();
+		document.getElementById('PrimaryDNS').value = netConfig.getPrimaryDNS();
+		document.getElementById('SecondaryDNS').value = netConfig.getSecondayDNS();
+		document.getElementById('UserName').value = netConfig.getUserName();
+		document.getElementById('Password').value = netConfig.getPassword();
+		document.getElementById('DCHPEnabledCheck').checked = netConfig.getDHCPEnabled();
+		document.getElementById('WebLoginEnabled').checked = netConfig.getWebLoginEnabled();
+		document.getElementById('httpPort').value = netConfig.getHttpPort();
+		
+		for(var i = 0; i<8; i++)
+		{
+			var id = i + 1;
+			document.getElementById('limit' + id).value = netConfig.getAllowedIpAddress(id);
+		}
+		
+	}
+}
+
+window.onload = function() {
+
+	document.getElementById('sendBtn').disabled=true;
+			
+	NetDevAPI.getNetworkConfig(getCfgCallback);
+	NetDevAPI.getGeneralConfig(genCfgCallback);
+}
+
+function statusUpdate(statusXML)
+{
+	if(statusXML != null)
+	{
+		var id = document.getElementById('date');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'date');
+		}
+		
+		var id = document.getElementById('time');
+		if(id)
+		{
+			id.innerHTML = getXMLValue(statusXML, 'time');
+		}
+	}
+	
+	setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+	
+}
+
+function genCfgCallback(cfg)
+{
+	if(cfg != null)
+	{
+		if(cfg.getAjaxPolling())
+		{
+			setTimeout("NetDevAPI.getBoardStatus(statusUpdate)", 500);
+		}
+	}
+}
+
+</script>
+
+<div class="spacer">&nbsp;</div>
+<div id="footer" align="center">Copyright &copy; 2008-2012 CAI Networks, Inc.</div>
+</body>
+<HEAD>
+<META HTTP-EQUIV="PRAGMA" CONTENT="NO-CACHE">
+</HEAD>
+</html>

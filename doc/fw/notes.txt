@@ -1,0 +1,22 @@
+
+
+
+Notes sent on 1/3/12:
+Firmware 03.02.11 reports firmware version as "v3.02.11" in getall.cgi where firmware 03.02.09 reports it as "3.02.09".  
+I can deal with the change but consistency is nice, I'm planning on using this data to make sure my code communicates with the board
+properly
+<firmware>3.02.09</firmware>
+<firmware>v03.02.11</firmware>
+
+Firmware 03.02.11 NetDevAPI.js the comment describing the updated structure wasn't updated:
+        /*data is encoded into the following structure
+        struct
+        {
+                INT32 region_second_adj;
+                BOOL ajax_polling;
+                UINT8 pad; 
+        }NVM_GENERAL_CONFIG; */
+
+
+Page 22 manual: ..., "even the delay operator value is in unit of 1 mS.."  Should be "even though the delay operator is in units of 1mS."
+
